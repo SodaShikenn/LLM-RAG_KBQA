@@ -1,0 +1,31 @@
+flask
+flask-migrate
+flask-sqlalchemy
+flask-wtf
+gunicorn
+bs4
+python-dotenv
+openai
+psycopg2-binary
+celery
+redis
+backports.tarfile
+pymilvus==2.4.4
+pymupdf
+python-docx
+pandas
+# grpcio
+# environs==9.5.0
+# marshmallow>=3.0.0,<4.0.0
+# milvus-lite>=2.4.0,<2.5.0
+# alembic
+# sqlalchemy
+# wtforms
+# click-didyoumean
+# click-plugins
+# click-repl
+# billiard
+# kombu>=5.5.2,<5.6
+# vine
+# amqp
+# jiter
