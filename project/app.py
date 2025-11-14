@@ -37,12 +37,15 @@ def initialize_extensions(app):
 
 
 def register_blueprints(app):
-    # 示例模块
+    # demo模块
     from apps.demo import bp as demo_bp
     app.register_blueprint(demo_bp)
     # Auth模块
     from apps.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
+    # dataset模块
+    from apps.dataset import bp as dataset_bp
+    app.register_blueprint(dataset_bp)
 
 
 app = create_app()

@@ -1,0 +1,134 @@
+{% extends 'layouts/main.html' %}
+
+{% block header %}
+<title>KB List</title>
+{% endblock %}
+
+{% block content %}
+<div class="flex-1">
+    <div class="h-full p-4 pl-0">
+        <div class="h-full w-full rounded-lg border border-gray-300 bg-white overflow-auto p-6">
+
+            <div class="flex justify-between items-center">
+                <div class="flex items-center mb-4 text-blue-500">
+                    <i class="fa fa-book text-2xl mr-2"></i>
+                    <h1 class="text-2xl font-medium">My Knowledege Base</h1>
+                </div>
+                <div class="flex justify-end mb-4">
+                    <a href="{{url_for('dataset.dataset_create')}}"
+                        class="flex items-center bg-blue-500 text-white px-4 py-2 text-sm rounded-lg shadow hover:bg-blue-600">
+                        <i class="fa fa-plus mr-2"></i>
+                        <span>Create</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="border rounded-lg p-6">
+                No KB yet? Go and create one!
+            </div>
+
+            <div class="grid grid-cols-3 gap-6">
+
+                <!-- KB Module -->
+                <div class="border rounded-lg p-4 flex flex-col justify-between hover:border-blue-500">
+                    <a href="">
+                        <div class="flex items-center mb-2">
+                            <i class="fa fa-file text-gray-500 text-xl mr-2"></i>
+                            <h2 class="text-lg font-medium">Test KB</h2>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">
+                            This is the introduction section of the KB, providing a brief overview of the document's
+                            content.
+                        </p>
+                    </a>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">3 Docs</span>
+                        <div class="space-x-1">
+                            <a href=""
+                                class="bg-green-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-green-600">Edit</a>
+                            <a href=""
+                                class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KB Module -->
+                <div class="border rounded-lg p-4 flex flex-col justify-between hover:border-blue-500">
+                    <a href="">
+                        <div class="flex items-center mb-2">
+                            <i class="fa fa-file text-gray-500 text-xl mr-2"></i>
+                            <h2 class="text-lg font-medium">Test KB</h2>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">
+                            This is the introduction section of the KB, providing a brief overview of the document's
+                            content.
+                        </p>
+                    </a>
+                    <div class="flex justify-between items-center">
+                        <div class="text-sm text-gray-600">
+                            <span>3 Docs</span>
+                            <span class="mx-1">/</span>
+                            <span>2025-11-15</span>
+                        </div>
+                        <div class="space-x-1">
+                            <a href=""
+                                class="bg-green-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-green-600">Edit</a>
+                            <a href=""
+                                class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KB Module -->
+                <div class="border rounded-lg p-4 flex flex-col justify-between hover:border-blue-500">
+                    <a href="">
+                        <div class="flex items-center mb-2">
+                            <i class="fa fa-file text-gray-500 text-xl mr-2"></i>
+                            <h2 class="text-lg font-medium">Test KB</h2>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">
+                            This is the introduction section of the KB, providing a brief overview of the document's
+                            content.
+                        </p>
+                    </a>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">3 Docs</span>
+                        <div class="space-x-1">
+                            <a href=""
+                                class="bg-green-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-green-600">Edit</a>
+                            <a href=""
+                                class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KB Module -->
+                <div class="border rounded-lg p-4 flex flex-col justify-between hover:border-blue-500">
+                    <a href="">
+                        <div class="flex items-center mb-2">
+                            <i class="fa fa-file text-gray-500 text-xl mr-2"></i>
+                            <h2 class="text-lg font-medium">Test KB</h2>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">
+                            This is the introduction section of the KB, providing a brief overview of the document's
+                            content.
+                        </p>
+                    </a>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">3 Docs</span>
+                        <div class="space-x-1">
+                            <a href=""
+                                class="bg-green-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-green-600">Edit</a>
+                            <a href=""
+                                class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

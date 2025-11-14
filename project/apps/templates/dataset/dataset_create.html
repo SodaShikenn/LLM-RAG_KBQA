@@ -1,0 +1,53 @@
+{% extends 'layouts/main.html' %}
+
+{% block header %}
+<title>Create KB</title>
+{% endblock %}
+
+{% block content %}
+<div class="flex-1">
+    <div class="h-full p-4 pl-0">
+        <div class="h-full w-full rounded-lg border border-gray-300 bg-white overflow-auto p-6">
+
+            <div class="flex justify-between items-center">
+                <div class="flex items-center mb-4 text-blue-500">
+                    <i class="fa fa-book text-2xl mr-2"></i>
+                    <h1 class="text-2xl font-medium">Edit KB</h1>
+                </div>
+            </div>
+
+            <div class="p-6 w-full md:w-[780px]">
+                <form action="">
+                    <div class="py-2">
+                        <div class="mb-2 text-sm font-medium">KB Name:</div>
+                        <div class="w-full text-sm">
+                            <input type="text" class="px-4 py-2 w-full bg-gray-100 rounded"
+                                placeholder="Enter knowledge base name">
+                        </div>
+                    </div>
+                    <div class="py-2">
+                        <div class="mb-2 text-sm font-medium">KB Description:</div>
+                        <div class="w-full text-sm">
+                            <textarea class="px-4 py-2 w-full h-[120px] bg-gray-100 rounded"
+                                placeholder="Enter the description of this knowledge base"></textarea>
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-2 space-x-4">
+                        <a href="#"
+                            class="text-sm bg-gray-500 text-white px-4 py-1.5 rounded-lg shadow hover:bg-gray-600">
+                            Back to List
+                        </a>
+                        <button type="submit"
+                            class="text-sm bg-blue-500 text-white px-4 py-1.5 rounded-lg shadow hover:bg-blue-600">
+                            Save
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+{% endblock %}
