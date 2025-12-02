@@ -32,7 +32,7 @@
             {% include "widgets/flash_messages.html" %}
             <div class="grid grid-cols-3 gap-6">
                 {% for item in datasets %}
-                <!-- 知识库单元 -->
+                <!-- KB Unit -->
                 <div class="border rounded-lg p-4 flex flex-col justify-between hover:border-blue-500">
                     <a href="">
                         <div class="flex items-center mb-2">
@@ -46,7 +46,7 @@
                     <div class="flex justify-between items-center">
                         <span class="text-sm text-gray-600">3 doc</span>
                         <div class="space-x-1">
-                            <a href=""
+                            <a href="{{url_for('dataset.dataset_edit', dataset_id=item.id)}}"
                                 class="bg-green-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-green-600">Edit</a>
                             <a href=""
                                 class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</a>

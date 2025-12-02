@@ -35,6 +35,25 @@ def create():
     # Render the page
     return render_template("dataset/dataset_create.html", form=form)
 
+@bp.route("/dataset_edit/<int:dataset_id>", methods=["GET", "POST"], endpoint="dataset_edit")
+def edit(dataset_id):
+    form = DatasetForm(request.form)
+    if request.method == "POST" and form.validate():
+        name = form.name.data
+        desc = form.desc.data
 
+        dataset = Dataset.query.filter_by(id=dataset_id).first()
+        dataset.name = name
+        dataset.desc = desc
+        db.session.commit()
 
+        flash("Edited KB Successfully!", "success")
+        return redirect(url_for("dataset.dataset_list"))
+    else:
+        if form.errors:
+            error_msg = ' '.join([error[0] for error in form.errors.values()])
+            flash(error_msg, "error")
+    # Query a single dataset entry
+    dataset = Dataset.query.filter_by(id=dataset_id).first()
+    return render_template("dataset/dataset_edit.html", dataset=dataset, form=form)
 
