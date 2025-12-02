@@ -23,28 +23,28 @@
                 </div>
             </div>
 
+            {% if not datasets %}
             <div class="border rounded-lg p-6">
-                No KB yet? Go and create one!
+                No KB yet, please create one!
             </div>
+            {% endif %}
 
             {% include "widgets/flash_messages.html" %}
-
             <div class="grid grid-cols-3 gap-6">
-
-                <!-- KB Module -->
+                {% for item in datasets %}
+                <!-- 知识库单元 -->
                 <div class="border rounded-lg p-4 flex flex-col justify-between hover:border-blue-500">
                     <a href="">
                         <div class="flex items-center mb-2">
                             <i class="fa fa-file text-gray-500 text-xl mr-2"></i>
-                            <h2 class="text-lg font-medium">Test KB</h2>
+                            <h2 class="text-lg font-medium">{{item.name}}</h2>
                         </div>
                         <p class="text-gray-600 text-sm mb-4">
-                            This is the introduction section of the KB, providing a brief overview of the document's
-                            content.
+                            {{item.desc}}
                         </p>
                     </a>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">3 Docs</span>
+                        <span class="text-sm text-gray-600">3 doc</span>
                         <div class="space-x-1">
                             <a href=""
                                 class="bg-green-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-green-600">Edit</a>
@@ -53,83 +53,8 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- KB Module -->
-                <div class="border rounded-lg p-4 flex flex-col justify-between hover:border-blue-500">
-                    <a href="">
-                        <div class="flex items-center mb-2">
-                            <i class="fa fa-file text-gray-500 text-xl mr-2"></i>
-                            <h2 class="text-lg font-medium">Test KB</h2>
-                        </div>
-                        <p class="text-gray-600 text-sm mb-4">
-                            This is the introduction section of the KB, providing a brief overview of the document's
-                            content.
-                        </p>
-                    </a>
-                    <div class="flex justify-between items-center">
-                        <div class="text-sm text-gray-600">
-                            <span>3 Docs</span>
-                            <span class="mx-1">/</span>
-                            <span>2025-11-15</span>
-                        </div>
-                        <div class="space-x-1">
-                            <a href=""
-                                class="bg-green-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-green-600">Edit</a>
-                            <a href=""
-                                class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- KB Module -->
-                <div class="border rounded-lg p-4 flex flex-col justify-between hover:border-blue-500">
-                    <a href="">
-                        <div class="flex items-center mb-2">
-                            <i class="fa fa-file text-gray-500 text-xl mr-2"></i>
-                            <h2 class="text-lg font-medium">Test KB</h2>
-                        </div>
-                        <p class="text-gray-600 text-sm mb-4">
-                            This is the introduction section of the KB, providing a brief overview of the document's
-                            content.
-                        </p>
-                    </a>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">3 Docs</span>
-                        <div class="space-x-1">
-                            <a href=""
-                                class="bg-green-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-green-600">Edit</a>
-                            <a href=""
-                                class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- KB Module -->
-                <div class="border rounded-lg p-4 flex flex-col justify-between hover:border-blue-500">
-                    <a href="">
-                        <div class="flex items-center mb-2">
-                            <i class="fa fa-file text-gray-500 text-xl mr-2"></i>
-                            <h2 class="text-lg font-medium">Test KB</h2>
-                        </div>
-                        <p class="text-gray-600 text-sm mb-4">
-                            This is the introduction section of the KB, providing a brief overview of the document's
-                            content.
-                        </p>
-                    </a>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">3 Docs</span>
-                        <div class="space-x-1">
-                            <a href=""
-                                class="bg-green-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-green-600">Edit</a>
-                            <a href=""
-                                class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</a>
-                        </div>
-                    </div>
-                </div>
-
-
+                {% endfor %}
             </div>
-
         </div>
     </div>
 </div>

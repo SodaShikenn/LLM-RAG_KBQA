@@ -7,12 +7,13 @@ from ..forms import DatasetForm
 
 @bp.route('/', endpoint='dataset_list')
 def index():
+    datasets = Dataset.query.order_by(Dataset.id.desc()).all()
+    return render_template('dataset/dataset_list.html', datasets=datasets)
     return render_template('dataset/dataset_list.html')
 
 
 @bp.route("/dataset_create", methods=["GET", "POST"], endpoint="dataset_create")
 def create():
-    
     form = DatasetForm(request.form)
     if request.method == "POST" and form.validate():
         name = form.name.data
