@@ -1,40 +1,141 @@
-### Main Function
-1、Auth模块，讲解用户登录、会话保持、退出登录功能，只有登录到系统的用户，才能在后台管理知识库。
+# Knowledge Base Question Answering System with LLM-RAG
 
-2、知识库模块，讲解知识库管理、文档管理、分段管理功能，详细拆解通过网页上传文档，添加片段等功能。
+A comprehensive knowledge base question answering system built with Flask, leveraging Large Language Models (LLM) and Retrieval-Augmented Generation (RAG) for intelligent document-based Q&A.
 
-3、文本向量化，讲解用异步的方式，将文档拆分成片段，然后向量化，再存储到Milvus向量数据库的全过程。
+## Overview
 
-4、知识库问答，讲解基于用户选择的知识库，进行文档片段召回，让大模型做更有针对性的回答。
+This system provides a complete solution for managing knowledge bases, processing documents, and delivering contextual answers through AI-powered retrieval and generation. The platform features user authentication, document management, vector-based search, and conversational AI capabilities.
 
-5、对话历史管理，讲解历史对话信息的增删改查，巩固前面学习的前后端交互功能。
+**Last Updated:** December 2, 2025
+**Status:** Knowledge base CRUD operations fully implemented
 
-### Architecture
-project
-├── app.py                       # 应用程序入口
-├── apps
-│   └── demo                     # demo 模块
-│       ├── __init__.py          # demo 应用初始化，蓝图设置
-│       └── views.py             # demo 应用视图函数
-├── commands
-│   ├── __init__.py              # 自定义命令初始化
-│   └── hello.py                 # 示例自定义命令
-├── config.py                    # 配置文件
-├── extensions
-│   ├── ext_celery.py            # Celery 集成
-│   ├── ext_database.py          # 数据库设置和集成
-│   ├── ext_logger.py            # 日志配置
-│   ├── ext_migrate.py           # 数据库迁移设置
-│   ├── ext_milvus.py            # Milvus 集成
-│   ├── ext_redis.py             # Redis 配置
-│   └── ext_template_filter.py   # 自定义 Jinja 模板过滤器
-├── helper.py                    # 辅助函数
-├── readme.txt                   # 项目文档
-├── requirements.txt             # Python 依赖
-├── static                       # 静态文件 (CSS, JS, 图像)
-├── storage
-│   ├── files                    # 上传的文件
-│   └── logs
-│       └── app-20240801.log     # 应用日志文件
-└── tasks
-    └── demo_task.py             # 示例后台任务
+## Key Features
+
+### 1. Authentication Module
+
+- User login and registration
+- Session management and persistence
+- Secure logout functionality
+- Role-based access control for knowledge base management
+
+### 2. Knowledge Base Management
+
+- **KB CRUD Operations**: Create, read, update, and delete knowledge bases
+- **Document Management**: Upload and manage documents via web interface
+- **Segment Management**: Break down documents into manageable segments
+- Add custom text segments to enhance knowledge base content
+
+### 3. Text Vectorization
+
+- **Asynchronous Processing**: Documents are processed asynchronously for optimal performance
+- **Document Segmentation**: Automatic splitting of documents into semantic chunks
+- **Vector Embedding**: Text segments are converted to vector embeddings
+- **Milvus Integration**: Vectors are stored in Milvus vector database for efficient similarity search
+
+### 4. Knowledge Base Question Answering
+
+- **Context-Aware Retrieval**: Retrieve relevant document segments based on user queries
+- **LLM Integration**: Large Language Models generate accurate, context-specific answers
+- **Multi-KB Support**: Users can select specific knowledge bases for targeted responses
+
+### 5. Conversation History Management
+
+- Track and store conversation history
+- Full CRUD operations on historical dialogues
+- Review past interactions and insights
+
+## Project Architecture
+
+```text
+project/
+├── app.py                       # Application entry point
+├── apps/
+│   ├── auth/                    # Authentication module
+│   ├── dataset/                 # Knowledge base (dataset) module
+│   ├── document/                # Document management module
+│   ├── segment/                 # Segment management module
+│   └── demo/                    # Demo module
+│       ├── __init__.py          # Blueprint initialization
+│       └── views.py             # View functions
+├── commands/
+│   ├── __init__.py              # Custom commands initialization
+│   └── hello.py                 # Example custom command
+├── config.py                    # Application configuration
+├── extensions/
+│   ├── ext_celery.py            # Celery integration for async tasks
+│   ├── ext_database.py          # Database setup and integration
+│   ├── ext_logger.py            # Logging configuration
+│   ├── ext_migrate.py           # Database migration setup
+│   ├── ext_milvus.py            # Milvus vector database integration
+│   ├── ext_redis.py             # Redis configuration
+│   └── ext_template_filter.py   # Custom Jinja template filters
+├── helper.py                    # Utility helper functions
+├── requirements.txt             # Python dependencies
+├── static/                      # Static assets (CSS, JS, images)
+├── templates/                   # HTML templates
+├── storage/
+│   ├── files/                   # Uploaded document storage
+│   └── logs/
+│       └── app-YYYYMMDD.log     # Application log files
+└── tasks/
+    └── demo_task.py             # Background task examples
+```
+
+## Technology Stack
+
+- **Backend Framework**: Flask
+- **Database**: PostgreSQL/MySQL (via SQLAlchemy)
+- **Vector Database**: Milvus
+- **Cache/Queue**: Redis
+- **Task Queue**: Celery
+- **LLM Integration**: OpenAI API / Custom LLM endpoints
+- **Frontend**: HTML, CSS (Tailwind), JavaScript
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.8+
+- PostgreSQL or MySQL
+- Redis
+- Milvus vector database
+
+### Installation
+
+1. Clone the repository
+
+2. Install dependencies:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Configure `config.py` with your database and API credentials
+
+4. Initialize the database:
+
+   ```bash
+   flask db upgrade
+   ```
+
+5. Run the application:
+
+   ```bash
+   python app.py
+   ```
+
+## Usage
+
+1. **Login**: Access the system through the authentication module
+2. **Create Knowledge Base**: Set up a new KB with name and description
+3. **Upload Documents**: Add documents to your knowledge base
+4. **Ask Questions**: Query your knowledge base for intelligent, context-aware answers
+5. **Review History**: Access past conversations and insights
+
+## License
+
+[Your License Here]
+
+## Contributing
+
+Contributions are welcome! Please submit pull requests or open issues for any improvements.

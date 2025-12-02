@@ -48,8 +48,7 @@
                         <div class="space-x-1">
                             <a href="{{url_for('dataset.dataset_edit', dataset_id=item.id)}}"
                                 class="bg-green-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-green-600">Edit</a>
-                            <a href=""
-                                class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</a>
+                            <a href="#" data-url="{{ url_for('dataset.dataset_delete', dataset_id=item.id) }}" onclick="confirmDeletion(event)" class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</a>
                         </div>
                     </div>
                 </div>
@@ -58,4 +57,17 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block footer %}
+<script>
+    function confirmDeletion(event) {
+        const url = event.target.getAttribute('data-url');
+        if (!confirm('Are you sure to delete this KB?')) {
+            event.preventDefault();
+        } else {
+            window.location.href = url;
+        }
+    }
+</script>
 {% endblock %}

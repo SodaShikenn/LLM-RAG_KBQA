@@ -47,7 +47,7 @@ def edit(dataset_id):
         dataset.desc = desc
         db.session.commit()
 
-        flash("Edited KB Successfully!", "success")
+        flash("KB Edited  Successfully!", "success")
         return redirect(url_for("dataset.dataset_list"))
     else:
         if form.errors:
@@ -57,3 +57,18 @@ def edit(dataset_id):
     dataset = Dataset.query.filter_by(id=dataset_id).first()
     return render_template("dataset/dataset_edit.html", dataset=dataset, form=form)
 
+@bp.route("/dataset_delete/<int:dataset_id>", endpoint="dataset_delete")
+def delete(dataset_id):
+    try:
+        Dataset.query.filter_by(id=dataset_id).delete()
+        # Commit stuff
+        db.session.commit()
+
+        # @todo Delete all child data
+
+        flash("KB Deleted Successfully!", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Operation Failed: {e}", "error")
+
+    return redirect(url_for("dataset.dataset_list"))
