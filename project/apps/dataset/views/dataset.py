@@ -2,16 +2,21 @@ from .. import bp
 from flask import request, render_template, redirect, url_for, flash
 from extensions.ext_database import db
 from ..models import Dataset
+from ..forms import DatasetForm
+
 
 @bp.route('/', endpoint='dataset_list')
 def index():
     return render_template('dataset/dataset_list.html')
 
-@bp.route("/dataset_create", methods=['GET', 'POST'], endpoint="dataset_create")
+
+@bp.route("/dataset_create", methods=["GET", "POST"], endpoint="dataset_create")
 def create():
-    if request.method == 'POST':
-        name = request.form.get('name')
-        desc = request.form.get('desc')
+    
+    form = DatasetForm(request.form)
+    if request.method == "POST" and form.validate():
+        name = form.name.data
+        desc = form.desc.data
 
         # Create Dataset instance and insert data
         new_dataset = Dataset(name=name, desc=desc)
@@ -21,10 +26,13 @@ def create():
         flash("KB Creation Successful!", "success")
         return redirect(url_for("dataset.dataset_list"))
 
-    return render_template('dataset/dataset_create.html')
-
-
-
+    else:
+        if form.errors:
+            error_msg = ' '.join([error[0] for error in form.errors.values()])
+            flash(error_msg, "error")
+            
+    # Render the page
+    return render_template("dataset/dataset_create.html", form=form)
 
 
 

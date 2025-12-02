@@ -1,7 +1,3 @@
-# 陈华编程 LLM-RAG 项目课程
-
-
-
 ## 安装依赖软件
 docker-compose -f milvus-standalone-docker-compose.yml up -d
 docker-compose up -d
