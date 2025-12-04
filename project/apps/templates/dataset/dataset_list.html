@@ -34,7 +34,7 @@
                 {% for item in datasets %}
                 <!-- KB Unit -->
                 <div class="border rounded-lg p-4 flex flex-col justify-between hover:border-blue-500">
-                    <a href="">
+                    <a href="{{url_for('dataset.document_list', dataset_id=item.id)}}">
                         <div class="flex items-center mb-2">
                             <i class="fa fa-file text-gray-500 text-xl mr-2"></i>
                             <h2 class="text-lg font-medium">{{item.name}}</h2>
@@ -48,7 +48,9 @@
                         <div class="space-x-1">
                             <a href="{{url_for('dataset.dataset_edit', dataset_id=item.id)}}"
                                 class="bg-green-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-green-600">Edit</a>
-                            <a href="#" data-url="{{ url_for('dataset.dataset_delete', dataset_id=item.id) }}" onclick="confirmDeletion(event)" class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</a>
+                            <a href="#" data-url="{{ url_for('dataset.dataset_delete', dataset_id=item.id) }}"
+                                onclick="confirmDeletion(event)"
+                                class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</a>
                         </div>
                     </div>
                 </div>

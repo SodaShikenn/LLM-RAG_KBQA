@@ -14,24 +14,24 @@ class Dataset(db.Model):
     def __repr__(self):
         return f'<Dataset {self.id}, {self.name}>'
 
+class Document(db.Model):
+    __tablename__ = 'document'
 
-# class Document(db.Model):
-#     __tablename__ = 'document'
+    __table_args__ = (
+        db.Index('idx_document_dataset_id', 'dataset_id'),
+    )
 
-#     __table_args__ = (
-#         db.Index('idx_document_dataset_id', 'dataset_id'),
-#     )
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    dataset_id = db.Column(db.Integer, nullable=False)
+    file_name = db.Column(db.String(100), nullable=False)  # 文件名称
+    file_path = db.Column(db.String(100), nullable=False)  # 文件路径
+    status = db.Column(db.String(100), nullable=False)  # 状态
+    created_at = db.Column(db.DateTime, nullable=True, default=func.now())
+    updated_at = db.Column(db.DateTime, nullable=True, default=func.now(), onupdate=func.now())
 
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-#     dataset_id = db.Column(db.Integer, nullable=False)
-#     file_name = db.Column(db.String(100), nullable=False)  # 文件名称
-#     file_path = db.Column(db.String(100), nullable=False)  # 文件路径
-#     status = db.Column(db.String(100), nullable=False)  # 状态
-#     created_at = db.Column(db.DateTime, nullable=True, default=func.now())
-#     updated_at = db.Column(db.DateTime, nullable=True, default=func.now(), onupdate=func.now())
+    def __repr__(self):
+        return f'<Document {self.id}, {self.file_name}>'
 
-#     def __repr__(self):
-#         return f'<Document {self.id}, {self.file_name}>'
     
 
 # class Segment(db.Model):

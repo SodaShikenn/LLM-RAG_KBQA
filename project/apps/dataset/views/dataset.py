@@ -72,3 +72,4 @@ def delete(dataset_id):
         flash(f"Operation Failed: {e}", "error")
 
     return redirect(url_for("dataset.dataset_list"))
+    
