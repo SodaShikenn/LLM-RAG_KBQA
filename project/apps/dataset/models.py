@@ -6,8 +6,8 @@ class Dataset(db.Model):
     __tablename__ = 'dataset'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50), nullable=False)  # 知识库名称
-    desc = db.Column(db.String(200), nullable=False)  # 知识库描述
+    name = db.Column(db.String(50), nullable=False)  # Knowledge base name
+    desc = db.Column(db.String(200), nullable=False)  # Knowledge base description
     created_at = db.Column(db.DateTime, nullable=True, default=func.now())
     updated_at = db.Column(db.DateTime, nullable=True, default=func.now(), onupdate=func.now())
 
@@ -23,9 +23,9 @@ class Document(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     dataset_id = db.Column(db.Integer, nullable=False)
-    file_name = db.Column(db.String(100), nullable=False)  # 文件名称
-    file_path = db.Column(db.String(100), nullable=False)  # 文件路径
-    status = db.Column(db.String(100), nullable=False)  # 状态
+    file_name = db.Column(db.String(100), nullable=False)  # File name
+    file_path = db.Column(db.String(100), nullable=False)  # File path
+    status = db.Column(db.String(100), nullable=False)  # Status
     created_at = db.Column(db.DateTime, nullable=True, default=func.now())
     updated_at = db.Column(db.DateTime, nullable=True, default=func.now(), onupdate=func.now())
 
@@ -45,9 +45,9 @@ class Document(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
 #     dataset_id = db.Column(db.Integer, nullable=False)
 #     document_id = db.Column(db.Integer, nullable=False)
-#     order = db.Column(db.Integer, nullable=False)  # 顺序
-#     content = db.Column(db.Text, nullable=False)  # 内容
-#     status = db.Column(db.String(100), nullable=False)  # 状态
+#     order = db.Column(db.Integer, nullable=False)  # Order
+#     content = db.Column(db.Text, nullable=False)  # Content
+#     status = db.Column(db.String(100), nullable=False)  # Status
 #     created_at = db.Column(db.DateTime, nullable=True, default=func.now())
 #     updated_at = db.Column(db.DateTime, nullable=True, default=func.now(), onupdate=func.now())
 

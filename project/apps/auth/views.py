@@ -16,8 +16,8 @@ def index():
             flash('Please enter your passsword', 'error')
 
         elif validate_user(email, password):
-            session['user'] = email  # 记录邮箱作为session，保持登录状态
-            return redirect(url_for('index'))  # 登录成功后重定向到首页
+            session['user'] = email  # Store email in session to maintain login state
+            return redirect(url_for('index'))  # Redirect to homepage after successful login
         else:
             flash('Incorrect email or password', 'error')
     
@@ -28,5 +28,5 @@ def index():
 
 @bp.route('/logout', endpoint='logout')
 def logout():
-    session.pop('user', None)  # 删除session数据
-    return redirect(url_for('auth.login'))  # 重定向到登录页面
+    session.pop('user', None)  # Remove session data
+    return redirect(url_for('auth.login'))  # Redirect to login page

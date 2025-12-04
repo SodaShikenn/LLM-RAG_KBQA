@@ -7,4 +7,11 @@ from ..models import Dataset, Document
 
 @bp.route("/document_list/<int:dataset_id>", endpoint="document_list")
 def list(dataset_id):
-    return f"document_list - dataset_id:{dataset_id}"
+    dataset = Dataset.query.filter_by(id=dataset_id).first()
+    return render_template("dataset/document_list.html", dataset=dataset)
+
+@bp.route("/document_create/<int:dataset_id>", methods=["GET", "POST"], endpoint="document_create")
+def create(dataset_id):
+    dataset = Dataset.query.filter_by(id=dataset_id).first()
+    # Render the page
+    return render_template("dataset/document_create.html", dataset=dataset)

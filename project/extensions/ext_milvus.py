@@ -19,10 +19,10 @@ class MilvusBaseModel:
 
     @classmethod
     def init_collection(cls):
-        # 初始化集合
+        # Initialize collection
         if cls.collection_name is None or cls.schema is None:
             raise ValueError("collection_name and schema must be defined in the subclass")
-        # 检查集合是否存在
+        # Check if collection exists
         collections = utility.list_collections()
         if cls.collection_name not in collections:
             cls.collection = Collection(name=cls.collection_name, schema=cls.schema)
@@ -34,7 +34,7 @@ class MilvusBaseModel:
     @classmethod
     def load_collection(cls):
         collection = Collection(name=cls.collection_name)
-        # 检查集合的加载状态
+        # Check collection load status
         if utility.load_state(cls.collection_name) == LoadState.NotLoad:
             collection.load()
         return collection
@@ -63,7 +63,7 @@ class MilvusBaseModel:
     @classmethod
     def get_entity_count(cls):
         collection = cls.load_collection()
-        # 获取集合中的实体数量
+        # Get entity count in collection
         entity_count = collection.num_entities
         return entity_count
 
@@ -76,10 +76,10 @@ class MilvusBaseModel:
     def query(cls, expr, output_fields=None):
         collection = cls.load_collection()
         if not output_fields:
-            # 动态获取所有字段
+            # Dynamically get all fields
             schema = collection.schema
             output_fields = [field.name for field in schema.fields]
-        # 查询数据
+        # Query data
         results = collection.query(expr=expr, output_fields=output_fields)
         return results
 
@@ -91,10 +91,10 @@ class MilvusBaseModel:
     @classmethod
     def search(cls, query_vectors, top_k, expr=None, output_fields=None):
         collection = cls.load_collection()
-        # 搜索数据
+        # Search data
         search_params = {"metric_type": "L2", "params": {"nprobe": 10}}
         if not output_fields:
-            # 动态获取所有字段
+            # Dynamically get all fields
             schema = collection.schema
             output_fields = [field.name for field in schema.fields]
         results = collection.search(query_vectors, cls.index_field_name, search_params, top_k, expr=expr, output_fields=output_fields)

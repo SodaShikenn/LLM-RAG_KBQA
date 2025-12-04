@@ -1,0 +1,71 @@
+{% extends "layouts/main.html" %}
+
+{% block header %}
+<title>Document List</title>
+{% endblock %}
+
+{% block content %}
+<div class="flex-1">
+    <div class="h-full p-4 pl-0">
+        <div class="h-full w-full rounded-lg border border-gray-300 bg-white overflow-auto p-6">
+
+            <div class="flex justify-between items-center">
+                <div class="flex items-center mb-4 text-blue-500">
+                    <i class="fa fa-book text-2xl mr-2"></i>
+                    <h1 class="text-2xl font-medium">{{dataset.name}}</h1>
+                    <div class="ml-4 bg-gray-200 rounded px-2 py-0.5 text-gray-600 text-sm">Document List</div>
+                </div>
+                <div class="flex justify-end mb-4">
+                    <a href="{{url_for('dataset.document_create', dataset_id=dataset.id)}}"
+                        class="flex items-center bg-blue-500 text-white px-4 py-2 text-sm rounded-lg shadow hover:bg-blue-600">
+                        <i class="fa fa-upload mr-2"></i>
+                        <span>Upload Document</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Document List -->
+            <table class="min-w-full bg-white">
+                <thead>
+                    <tr class="w-full bg-gray-100 text-left text-sm leading-normal text-gray-600">
+                        <th class="py-3 px-6 rounded-l-lg w-20 text-center">ID</th>
+                        <th class="py-3 px-6">Name</th>
+                        <th class="py-3 px-6">Upload Time</th>
+                        <th class="py-3 px-6">Status</th>
+                        <th class="py-3 px-6 rounded-r-lg w-28">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-600 text-sm">
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-3 px-6 text-center">1</td>
+                        <td class="py-3 px-6">Document Name 1.pdf</td>
+                        <td class="py-3 px-6">2024-07-01</td>
+                        <td class="py-3 px-6">
+                            <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Published</span>
+                        </td>
+                        <td class="py-3 px-6">
+                            <button
+                                class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</button>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-3 px-6 text-center">2</td>
+                        <td class="py-3 px-6">Document Name 2.txt</td>
+                        <td class="py-3 px-6">2024-07-02</td>
+                        <td class="py-3 px-6">
+                            <span class="bg-yellow-200 text-yellow-600 py-1 px-3 rounded-full text-xs">Draft</span>
+                        </td>
+                        <td class="py-3 px-6">
+                            <button
+                                class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</button>
+                        </td>
+                    </tr>
+                    <!-- Additional document rows can be added -->
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+</div>
+{% endblock %}
