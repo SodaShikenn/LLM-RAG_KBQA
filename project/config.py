@@ -23,3 +23,10 @@ CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 # Milvus database config
 MILVUS_HOST = '127.0.0.1'
 MILVUS_PORT = '19530'
+
+# Upload info config
+BASE_DIR = os.path.dirname(__file__)
+
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'storage', 'files')
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'csv', 'docx', 'xlsx', 'md','json'}
+MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB
