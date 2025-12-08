@@ -36,31 +36,20 @@
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 text-sm">
+                    {% for item in documents %}
                     <tr class="border-b border-gray-200 hover:bg-gray-50">
-                        <td class="py-3 px-6 text-center">1</td>
-                        <td class="py-3 px-6">Document Name 1.pdf</td>
-                        <td class="py-3 px-6">2024-07-01</td>
-                        <td class="py-3 px-6">
-                            <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Published</span>
+                        <td class="py-3 px-6 text-center">{{item.id}}</td>
+                        <td class="py-3 px-6">{{item.file_name}}</td>
+                        <td class="py-3 px-6">{{item.created_at.strftime('%Y-%m-%d')}}</td>
+                        <td class="py-3 px-6">{% set status_text, status_class = item.status | document_status %}
+                            <span class="py-1 px-3 rounded-full text-xs {{ status_class }}">{{ status_text }}</span>
                         </td>
                         <td class="py-3 px-6">
                             <button
                                 class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</button>
                         </td>
                     </tr>
-                    <tr class="border-b border-gray-200 hover:bg-gray-50">
-                        <td class="py-3 px-6 text-center">2</td>
-                        <td class="py-3 px-6">Document Name 2.txt</td>
-                        <td class="py-3 px-6">2024-07-02</td>
-                        <td class="py-3 px-6">
-                            <span class="bg-yellow-200 text-yellow-600 py-1 px-3 rounded-full text-xs">Draft</span>
-                        </td>
-                        <td class="py-3 px-6">
-                            <button
-                                class="bg-red-500 text-white px-3 py-1 text-sm rounded shadow hover:bg-red-600">Delete</button>
-                        </td>
-                    </tr>
-                    <!-- Additional document rows can be added -->
+                    {% endfor%}
                 </tbody>
             </table>
 
