@@ -9,8 +9,14 @@ from helper import *
 @bp.route("/document_list/<int:dataset_id>", endpoint="document_list")
 def list(dataset_id):
     dataset = Dataset.query.filter_by(id=dataset_id).first()
-    documents = Document.query.filter_by(dataset_id=dataset_id).order_by(Document.created_at.desc()).all()
-    return render_template("dataset/document_list.html", dataset=dataset, documents=documents)
+    # Realize paged logic
+    page = request.args.get('page', 1, type=int)
+    per_page = 20
+    pagination = Document.query.filter_by(
+        dataset_id=dataset_id
+    ).order_by(Document.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
+    documents = pagination.items
+    return render_template("dataset/document_list.html", dataset=dataset, documents=documents, pagination=pagination)
 
 @bp.route("/document_create/<int:dataset_id>", methods=["GET", "POST"], endpoint="document_create")
 def create(dataset_id):
@@ -53,3 +59,22 @@ def create(dataset_id):
     
     # Render the page
     return render_template("dataset/document_create.html", dataset=dataset)
+
+@bp.route("/document_delete/<int:document_id>", endpoint="document_delete")
+def delete(document_id):
+    document = Document.query.filter_by(id=document_id).first()
+    try:
+        Document.query.filter_by(id=document_id).delete()
+        # Commit transaction
+        db.session.commit()
+
+        # Delete local file
+        file_full_path = os.path.join(UPLOAD_FOLDER, document.file_path)
+        if os.path.exists(file_full_path):
+            os.remove(file_full_path)
+
+        flash("Document deleted successfully", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Operation failed: {e}", "error")
+    return redirect(url_for("dataset.document_list", dataset_id=document.dataset_id))
