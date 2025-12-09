@@ -40,7 +40,12 @@
                     {% for item in documents %}
                     <tr class="border-b border-gray-200 hover:bg-gray-50">
                         <td class="py-3 px-6 text-center">{{item.id}}</td>
-                        <td class="py-3 px-6">{{item.file_name}}</td>
+                        <td class="py-3 px-6">
+                            <a href="{{url_for('dataset.segment_list', document_id=item.id)}}"
+                                class="text-blue-500 hover:underline">
+                                {{item.file_name}}
+                            </a>
+                        </td>
                         <td class="py-3 px-6">{{item.created_at.strftime('%Y-%m-%d')}}</td>
                         <td class="py-3 px-6">{% set status_text, status_class = item.status | document_status %}
                             <span class="py-1 px-3 rounded-full text-xs {{ status_class }}">{{ status_text }}</span>

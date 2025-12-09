@@ -1,15 +1,28 @@
+import os
 from .. import bp
 from flask import request, render_template, redirect, url_for, flash
 from extensions.ext_database import db
-from ..models import Dataset
+from config import *
+from ..models import Dataset, Document, Segment
 from ..forms import DatasetForm
-
+from sqlalchemy.sql import func
 
 @bp.route('/', endpoint='dataset_list')
-def index():
-    datasets = Dataset.query.order_by(Dataset.id.desc()).all()
+def list():
+    datasets = (
+        db.session.query(
+            Dataset.id,
+            Dataset.name,
+            Dataset.desc,
+            Dataset.created_at,
+            func.count(Document.id).label("document_count"),
+        )
+        .outerjoin(Document, Dataset.id == Document.dataset_id)
+        .group_by(Dataset.id)
+        .order_by(Dataset.id.desc())
+        .all()
+    )
     return render_template('dataset/dataset_list.html', datasets=datasets)
-    return render_template('dataset/dataset_list.html')
 
 
 @bp.route("/dataset_create", methods=["GET", "POST"], endpoint="dataset_create")
@@ -59,12 +72,19 @@ def edit(dataset_id):
 
 @bp.route("/dataset_delete/<int:dataset_id>", endpoint="dataset_delete")
 def delete(dataset_id):
-    try:
-        Dataset.query.filter_by(id=dataset_id).delete()
-        # Commit stuff
-        db.session.commit()
+    try:  
+        documents = Document.query.filter_by(dataset_id=dataset_id).all()
+        # Delete local files
+        for document in documents:
+            file_full_path = os.path.join(UPLOAD_FOLDER, document.file_path)
+            if os.path.exists(file_full_path):
+                os.remove(file_full_path)
 
-        # @todo Delete all child data
+        Dataset.query.filter_by(id=dataset_id).delete()
+        Document.query.filter_by(dataset_id=dataset_id).delete()
+        Segment.query.filter_by(dataset_id=dataset_id).delete()
+        # Commit transaction
+        db.session.commit()
 
         flash("KB Deleted Successfully!", "success")
     except Exception as e:

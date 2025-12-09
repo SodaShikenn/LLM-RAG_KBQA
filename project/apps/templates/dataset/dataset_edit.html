@@ -1,7 +1,7 @@
 {% extends 'layouts/main.html' %}
 
 {% block header %}
-<title>Create KB</title>
+<title>Edit KB</title>
 {% endblock %}
 
 {% block content %}
@@ -12,42 +12,38 @@
             <div class="flex justify-between items-center">
                 <div class="flex items-center mb-4 text-blue-500">
                     <i class="fa fa-book text-2xl mr-2"></i>
-                    <h1 class="text-2xl font-medium">Edit Segment</h1>
+                    <h1 class="text-2xl font-medium">Edit Knowledge Base</h1>
                 </div>
-            </div>
-
-            <!-- Info area -->
-            <div class="mb-6 p-2 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700">
-                <p>Current segment belongs to document: <strong>{{document.file_name}}</strong></p>
             </div>
 
             <div class="w-full md:w-[780px]">
                 {% include 'widgets/flash_messages.html' %}
 
-                <form action="{{url_for('dataset.segment_create', document_id=document.id)}}" method="post">
+                <form action="{{url_for('dataset.dataset_edit', dataset_id=dataset.id)}}" method="post">
                     {{form.hidden_tag()}}
                     <div class="py-2">
-                        <div class="mb-2 text-sm font-medium">Segment Content:</div>
+                        <div class="mb-2 text-sm font-medium">KB Name:</div>
                         <div class="w-full text-sm">
-                            <textarea name="content" class="px-4 py-2 w-full h-[400px] bg-gray-100 rounded"
-                                placeholder="Please enter segment content.">{{request.form.content}}</textarea>
+                            <input name="name" value="{{dataset.name}}" type="text"
+                                class="px-4 py-2 w-full bg-gray-100 rounded"
+                                placeholder="Please enter knowledge base name.">
                         </div>
                     </div>
                     <div class="py-2">
-                        <div class="mb-2 text-sm font-medium">Segment Order:</div>
+                        <div class="mb-2 text-sm font-medium">KB Description:</div>
                         <div class="w-full text-sm">
-                            <input name="order" value="{{request.form.order | default(99)}}" type="number"
-                                class="px-4 py-2 w-full bg-gray-100 rounded">
+                            <textarea name="desc" class="px-4 py-2 w-full h-[200px] bg-gray-100 rounded"
+                                placeholder="Please enter knowledge base description.">{{dataset.desc}}</textarea>
                         </div>
                     </div>
                     <div class="flex justify-end mt-3 space-x-4">
-                        <a href="{{url_for('dataset.segment_list', document_id=document.id)}}"
+                        <a href="{{url_for('dataset.dataset_list')}}"
                             class="text-sm bg-gray-500 text-white px-4 py-1.5 rounded-lg shadow hover:bg-gray-600">
                             Back to List
                         </a>
                         <button type="submit"
                             class="text-sm bg-blue-500 text-white px-4 py-1.5 rounded-lg shadow hover:bg-blue-600">
-                            Save
+                            Update
                         </button>
                     </div>
                 </form>
@@ -57,5 +53,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
 {% endblock %}

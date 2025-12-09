@@ -17,7 +17,7 @@ def index():
 
         elif validate_user(email, password):
             session['user'] = email  # Store email in session to maintain login state
-            return redirect(url_for('index'))  # Redirect to homepage after successful login
+            return redirect(url_for('dataset.dataset_list'))  # Redirect to homepage after successful login
         else:
             flash('Incorrect email or password', 'error')
     

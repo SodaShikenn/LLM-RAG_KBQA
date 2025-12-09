@@ -64,14 +64,15 @@ def create(dataset_id):
 def delete(document_id):
     document = Document.query.filter_by(id=document_id).first()
     try:
-        Document.query.filter_by(id=document_id).delete()
-        # Commit transaction
-        db.session.commit()
-
         # Delete local file
         file_full_path = os.path.join(UPLOAD_FOLDER, document.file_path)
         if os.path.exists(file_full_path):
             os.remove(file_full_path)
+
+        Document.query.filter_by(id=document_id).delete()
+        Segment.query.filter_by(document_id=document_id).delete()
+        # Commit transaction
+        db.session.commit()
 
         flash("Document deleted successfully", "success")
     except Exception as e:
