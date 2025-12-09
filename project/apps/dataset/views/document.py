@@ -3,7 +3,7 @@ from flask import request, render_template, redirect, url_for, flash
 from extensions.ext_database import db
 from config import *
 from .. import bp
-from ..models import Dataset, Document
+from ..models import Dataset, Document, Segment
 from helper import *
 
 @bp.route("/document_list/<int:dataset_id>", endpoint="document_list")

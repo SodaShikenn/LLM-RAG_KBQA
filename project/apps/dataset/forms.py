@@ -17,3 +17,19 @@ class DatasetForm(FlaskForm):
             Length(max=200, message="KB description cannot exceed 200 characters.")
         ],
     )
+
+class SegmentForm(FlaskForm):
+    content = TextAreaField(
+        "Content",
+        validators=[
+            DataRequired(message="Content is required."),
+            Length(min=5, max=2000, message="Content must be between 5 and 2000 characters.")
+        ],
+    )
+    order = IntegerField(
+        "Order",
+        validators=[
+            DataRequired(message="Order is required."),
+            NumberRange(min=1, message="Order must be a positive integer.")
+        ],
+    )
