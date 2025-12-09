@@ -5,7 +5,7 @@ from extensions import ext_template_filter, ext_database, ext_migrate, \
 from commands import register_commands
 from config import *
 
-from apps.dataset.models import Dataset, Document
+from apps.dataset.models import Dataset, Document, Segment
 
 
 def create_app() -> Flask:

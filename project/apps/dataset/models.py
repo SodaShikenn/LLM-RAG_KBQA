@@ -34,22 +34,23 @@ class Document(db.Model):
 
     
 
-# class Segment(db.Model):
-#     __tablename__ = 'segment'
+class Segment(db.Model):
+    __tablename__ = 'segment'
 
-#     __table_args__ = (
-#         db.Index('idx_segment_dataset_id', 'dataset_id'),
-#         db.Index('idx_segment_document_id', 'document_id'),
-#     )
+    __table_args__ = (
+        db.Index('idx_segment_dataset_id', 'dataset_id'),
+        db.Index('idx_segment_document_id', 'document_id'),
+    )
 
-#     id = db.Column(db.Integer, primary_key=True)
-#     dataset_id = db.Column(db.Integer, nullable=False)
-#     document_id = db.Column(db.Integer, nullable=False)
-#     order = db.Column(db.Integer, nullable=False)  # Order
-#     content = db.Column(db.Text, nullable=False)  # Content
-#     status = db.Column(db.String(100), nullable=False)  # Status
-#     created_at = db.Column(db.DateTime, nullable=True, default=func.now())
-#     updated_at = db.Column(db.DateTime, nullable=True, default=func.now(), onupdate=func.now())
+    id = db.Column(db.Integer, primary_key=True)
+    dataset_id = db.Column(db.Integer, nullable=False)
+    document_id = db.Column(db.Integer, nullable=False)
+    order = db.Column(db.Integer, nullable=False)  # Order
+    content = db.Column(db.Text, nullable=False)  # Content
+    status = db.Column(db.String(100), nullable=False)  # Status
+    created_at = db.Column(db.DateTime, nullable=True, default=func.now())
+    updated_at = db.Column(db.DateTime, nullable=True, default=func.now(), onupdate=func.now())
 
-#     def __repr__(self):
-#         return f'<Segment {self.id}, {self.content[:20]}>'
+    def __repr__(self):
+        return f'<Segment {self.id}, {self.content[:20]}>'
+    
