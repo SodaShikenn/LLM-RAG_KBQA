@@ -71,6 +71,12 @@ def delete(document_id):
 
         Document.query.filter_by(id=document_id).delete()
         Segment.query.filter_by(document_id=document_id).delete()
+
+        # Check if all documents are deleted, reset sequence if so
+        remaining_documents = Document.query.count()
+        if remaining_documents == 0:
+            db.session.execute(db.text("ALTER SEQUENCE document_id_seq RESTART WITH 1"))
+
         # Commit transaction
         db.session.commit()
 

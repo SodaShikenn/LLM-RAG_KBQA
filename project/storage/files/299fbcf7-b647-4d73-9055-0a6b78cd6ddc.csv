@@ -1,0 +1,11 @@
+id,name,release_year,model_type,application,description
+1,ChatGPT-4,2023,LLM,NLP,OpenAI 开发的大型语言模型，用于对话、写作、理解自然语言等任务。
+2,Stable Diffusion 1.5,2022,Diffusion Model,Image Generation,开源图像生成模型，可根据文本生成高质量图片。
+3,Whisper,2022,Speech Recognition,ASR,OpenAI 的自动语音识别模型，支持多语言转录和翻译。
+4,AlphaFold 2,2021,Deep Learning,Biology,DeepMind 开发的蛋白质结构预测模型，对生物研究有重大推进。
+5,GPT-NeoX-20B,2022,LLM,NLP,EleutherAI 开源的大规模语言模型，支持文本生成和理解。
+6,DALL·E 3,2023,Diffusion Model,Image Generation,OpenAI 的文本到图像模型，擅长生成复杂且细节丰富的插画。
+7,Midjourney v6,2023,Diffusion Model,Art Creation,专注于艺术风格图像生成的模型，被广泛应用于创意设计。
+8,Claude 3 Opus,2024,LLM,NLP,Anthropic 开发的高性能语言模型，强调安全与推理能力。
+9,Segment Anything Model,2023,Vision,Image Segmentation,Meta AI 的通用图像分割模型，对计算机视觉研究影响巨大。
+10,Grok-1,2023,LLM,NLP,xAI 开发的模型，强调实时互联网检索能力和开放性。
