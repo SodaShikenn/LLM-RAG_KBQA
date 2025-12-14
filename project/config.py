@@ -35,3 +35,17 @@ MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB
 TOP_K = 3
 SEGMENT_LENGTH = 500
 OVERLAP = 100
+
+OPENAI_BASE_URL = 'https://api.openai.com/v1'
+OPENAI_API_KEY = 'YOURS'
+
+EMBEDDING_MODEL_NAME = 'text-embedding-3-small'
+
+EMBEDDING_MODELS = {
+    'text-embedding-3-small': {
+        'base_url': OPENAI_BASE_URL,
+        'api_key': OPENAI_API_KEY,
+        'model_name': 'text-embedding-3-small',
+        'vertor_dim': 1536
+    },
+}
