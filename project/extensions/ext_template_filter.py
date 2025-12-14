@@ -6,7 +6,7 @@ def init_app(app):
     def document_status_filter(value):
         status_map = {
             'init': ('Initialized', 'bg-blue-200 text-blue-600'),
-            'indexing': ('Indexed', 'bg-orange-200 text-orange-600'),
+            'indexing': ('Indexing', 'bg-orange-200 text-orange-600'),
             'error': ('Error', 'bg-red-200 text-red-600'),
             'completed': ('Completed', 'bg-green-200 text-green-600')
         }

@@ -30,3 +30,8 @@ BASE_DIR = os.path.dirname(__file__)
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'storage', 'files')
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'csv', 'docx', 'xlsx', 'md','json'}
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB
+
+# Retrieve config: Depends on the models and tasks
+TOP_K = 3
+SEGMENT_LENGTH = 500
+OVERLAP = 100

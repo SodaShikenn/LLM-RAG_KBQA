@@ -8,9 +8,10 @@ from config import *
 from helper import segment_text
 from extensions.ext_database import db
 
-@click.command("test_dataset_document_split_task")
-def run():
-    document_id = 2
+from celery import shared_task
+
+@shared_task(queue='dataset')
+def task(document_id):
     document = Document.query.filter_by(id=document_id).first()
     # Load and split files
     file_path = os.path.join(UPLOAD_FOLDER, document.file_path)

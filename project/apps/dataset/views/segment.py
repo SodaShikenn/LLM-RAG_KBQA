@@ -20,6 +20,12 @@ def create(document_id):
     if request.method == "POST" and form.validate():
         content = form.content.data
         order = form.order.data
+
+        # If no order provided, auto-assign next available order for this document
+        if not order:
+            max_order = db.session.query(db.func.max(Segment.order)).filter_by(document_id=document_id).scalar()
+            order = (max_order or 0) + 1
+
         new_segment = Segment(
             dataset_id = document.dataset_id,
             document_id = document_id,
@@ -66,9 +72,17 @@ def edit(segment_id):
 def delete(segment_id):
     segment = Segment.query.filter_by(id=segment_id).first()
     document_id = segment.document_id
+    deleted_order = segment.order
 
     try:
+        # Delete the segment
         Segment.query.filter_by(id=segment_id).delete()
+
+        # Reorder remaining segments for this document
+        remaining_segments = Segment.query.filter_by(document_id=document_id).order_by(Segment.order.asc()).all()
+        for i, seg in enumerate(remaining_segments, start=1):
+            seg.order = i
+
         # Commit transaction
         db.session.commit()
 
