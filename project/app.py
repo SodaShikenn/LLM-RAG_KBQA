@@ -53,6 +53,9 @@ def register_blueprints(app):
 app = create_app()
 celery = app.extensions["celery"]
 
+# Import tasks to register them with Celery
+import tasks
+
 
 if __name__ == '__main__':
     app.run(debug=DEBUG, host='0.0.0.0')

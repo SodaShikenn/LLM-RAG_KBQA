@@ -31,10 +31,10 @@ def run():
         # Update document status
         document.status = 'indexing'
         db.session.commit()
-        print('exec dateset_document_split_task success.')
+        print('exec dataset_document_split_task success.')
     except Exception as e:
         db.session.rollback()
-        print(f'exec dateset_document_split_task error. {e}')
+        print(f'exec dataset_document_split_task error. {e}')
 
 def load_and_split(file_path):
     _, file_extension = os.path.splitext(file_path)

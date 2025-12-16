@@ -5,10 +5,11 @@ import docx  # python-docx
 import pandas as pd
 from apps.dataset.models import Document, Segment
 from config import *
-from helper import segment_text
 from extensions.ext_database import db
-
+from helper import segment_text
 from celery import shared_task
+from .dataset_segment_embed_task import task as dataset_segment_embed_task
+
 
 @shared_task(queue='dataset')
 def task(document_id):
@@ -31,11 +32,20 @@ def task(document_id):
             db.session.add(new_segment)
         # Update document status
         document.status = 'indexing'
+
+        # Trigger embedding task, delay 10 seconds to wait for transaction commit
+        dataset_segment_embed_task.apply_async(
+            kwargs = {'document_id': document_id},
+            countdown = 10
+        )
+
         db.session.commit()
-        print('exec dateset_document_split_task success.')
+
+        print('exec dataset_document_split_task success.')
     except Exception as e:
         db.session.rollback()
-        print(f'exec dateset_document_split_task error. {e}')
+        print(f'exec dataset_document_split_task error. {e}')
+
 
 def load_and_split(file_path):
     _, file_extension = os.path.splitext(file_path)
@@ -52,6 +62,7 @@ def load_and_split(file_path):
     if file_ext == 'xlsx':
         return process_excel(file_path)
     return []
+
 
 def process_csv(file_path):
     df = pd.read_csv(file_path)
@@ -76,7 +87,7 @@ def process_pdf(file_path):
     for page_num in range(len(doc)):
         page = doc.load_page(page_num)
         text += page.get_text()
-    # Break text into chunks
+    # Segment text into chunks
     return segment_text(text, SEGMENT_LENGTH, OVERLAP)
 
 def process_txt(file_path):

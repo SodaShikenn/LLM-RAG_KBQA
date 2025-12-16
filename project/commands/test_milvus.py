@@ -40,7 +40,7 @@ def run():
     # # Delete collection
     # DatasetMilvusModel.drop_collection()
 
-    # 向量检索
+    # Vector search
     query_vector = [random() for i in range(1536)]
     records = DatasetMilvusModel.search([query_vector], 3)
     for record in records[0]:

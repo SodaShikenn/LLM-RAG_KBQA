@@ -5,7 +5,7 @@ from config import *
 from .. import bp
 from ..models import Dataset, Document, Segment
 from helper import *
-from tasks.dateset_document_split_task import task as dateset_document_split_task
+from tasks.dataset_document_split_task import task as dataset_document_split_task
 
 @bp.route("/document_list/<int:dataset_id>", endpoint="document_list")
 def list(dataset_id):
@@ -52,7 +52,7 @@ def create(dataset_id):
                     print(new_document.id)
 
                     # Initiate file splitting task
-                    dateset_document_split_task.delay(new_document.id)
+                    dataset_document_split_task.delay(new_document.id)
 
                     flash("File uploaded successfully", "success")
                     return redirect(url_for("dataset.document_list", dataset_id=dataset_id))

@@ -3,6 +3,7 @@ from extensions.ext_database import db
 from ..models import Dataset, Document, Segment
 from ..forms import SegmentForm
 from .. import bp
+from tasks.dataset_segment_embed_task import task as dataset_segment_embed_task
 
 @bp.route("/segment/<int:document_id>", endpoint="segment_list")
 def segment_list(document_id):
@@ -36,6 +37,12 @@ def create(document_id):
         db.session.add(new_segment)
         db.session.commit()
 
+        # Trigger embedding task for the new segment
+        dataset_segment_embed_task.apply_async(
+            kwargs={'segment_id': new_segment.id},
+            countdown=2
+        )
+
         flash("Segment inserted successfully!", "success")
         return redirect(url_for("dataset.segment_list", document_id=document.id))
     else:
@@ -54,9 +61,24 @@ def edit(segment_id):
     # Handle form data
     form = SegmentForm(request.form, obj=segment)
     if request.method == "POST" and form.validate():
+        # Check if content has changed
+        content_changed = segment.content != form.content.data
+
         segment.content = form.content.data
         segment.order = form.order.data
+
+        # Reset status to 'init' if content was modified
+        if content_changed:
+            segment.status = 'init'
+
         db.session.commit()
+
+        # Trigger re-embedding task if content was modified
+        if content_changed:
+            dataset_segment_embed_task.apply_async(
+                kwargs={'segment_id': segment_id},
+                countdown=2
+            )
 
         flash("Segment updated successfully!", "success")
         return redirect(url_for("dataset.segment_list", document_id=document.id))
