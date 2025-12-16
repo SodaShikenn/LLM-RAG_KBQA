@@ -37,7 +37,7 @@ SEGMENT_LENGTH = 500
 OVERLAP = 100
 
 OPENAI_BASE_URL = 'https://api.openai.com/v1'
-OPENAI_API_KEY = 'YOURS'
+OPENAI_API_KEY = 
 
 EMBEDDING_MODEL_NAME = 'text-embedding-3-small'
 
