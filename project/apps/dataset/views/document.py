@@ -6,6 +6,7 @@ from .. import bp
 from ..models import Dataset, Document, Segment
 from helper import *
 from tasks.dataset_document_split_task import task as dataset_document_split_task
+from ..milvus_models import DatasetMilvusModel
 
 @bp.route("/document_list/<int:dataset_id>", endpoint="document_list")
 def list(dataset_id):
@@ -79,6 +80,10 @@ def delete(document_id):
         remaining_documents = Document.query.count()
         if remaining_documents == 0:
             db.session.execute(db.text("ALTER SEQUENCE document_id_seq RESTART WITH 1"))
+
+        # Delete milvus data
+        delete_expr = f'document_id == {document_id}'
+        DatasetMilvusModel.delete(delete_expr)
 
         # Commit transaction
         db.session.commit()

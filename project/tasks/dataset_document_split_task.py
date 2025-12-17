@@ -32,7 +32,7 @@ def task(document_id):
             db.session.add(new_segment)
         # Update document status
         document.status = 'indexing'
-
+        
         # Trigger embedding task, delay 10 seconds to wait for transaction commit
         dataset_segment_embed_task.apply_async(
             kwargs = {'document_id': document_id},

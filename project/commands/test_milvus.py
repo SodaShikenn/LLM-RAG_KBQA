@@ -11,9 +11,9 @@ def run():
     else:
         print("Failed to connect to Milvus")
 
-    # # Initialize the collection and create an index
-    # DatasetMilvusModel.init_collection()
-    # DatasetMilvusModel.create_index()
+    # Initialize the collection and create an index
+    DatasetMilvusModel.init_collection()
+    DatasetMilvusModel.create_index()
 
     # # Insert data
     # data = [
@@ -26,9 +26,13 @@ def run():
     # DatasetMilvusModel.insert(data)
 
     # # Query data
-    # records = DatasetMilvusModel.query('dataset_id==2')
-    # print(records)
+    # records = DatasetMilvusModel.query('document_id==6')
+    # # print(records)
     # print(len(records))
+
+    # # Get total count instead (faster)
+    # count = DatasetMilvusModel.get_entity_count()
+    # print(f"Total entities in Milvus: {count}")
 
     # # View data amount
     # print(DatasetMilvusModel.get_entity_count())
@@ -41,7 +45,7 @@ def run():
     # DatasetMilvusModel.drop_collection()
 
     # Vector search
-    query_vector = [random() for i in range(1536)]
-    records = DatasetMilvusModel.search([query_vector], 3)
-    for record in records[0]:
-        print(record)
+    # query_vector = [random() for i in range(1536)]
+    # records = DatasetMilvusModel.search([query_vector], 3)
+    # for record in records[0]:
+    #     print(record)

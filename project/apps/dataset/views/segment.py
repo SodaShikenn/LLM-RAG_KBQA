@@ -4,6 +4,7 @@ from ..models import Dataset, Document, Segment
 from ..forms import SegmentForm
 from .. import bp
 from tasks.dataset_segment_embed_task import task as dataset_segment_embed_task
+from ..milvus_models import DatasetMilvusModel
 
 @bp.route("/segment/<int:document_id>", endpoint="segment_list")
 def segment_list(document_id):
@@ -94,7 +95,6 @@ def edit(segment_id):
 def delete(segment_id):
     segment = Segment.query.filter_by(id=segment_id).first()
     document_id = segment.document_id
-    deleted_order = segment.order
 
     try:
         # Delete the segment
@@ -104,6 +104,10 @@ def delete(segment_id):
         remaining_segments = Segment.query.filter_by(document_id=document_id).order_by(Segment.order.asc()).all()
         for i, seg in enumerate(remaining_segments, start=1):
             seg.order = i
+
+        # Delete milvus data
+        delete_expr = f'segment_id == {segment_id}'
+        DatasetMilvusModel.delete(delete_expr)
 
         # Commit transaction
         db.session.commit()

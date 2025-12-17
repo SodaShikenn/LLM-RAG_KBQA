@@ -6,6 +6,7 @@ from config import *
 from ..models import Dataset, Document, Segment
 from ..forms import DatasetForm
 from sqlalchemy.sql import func
+from ..milvus_models import DatasetMilvusModel
 
 @bp.route('/', endpoint='dataset_list')
 def list():
@@ -36,7 +37,7 @@ def create():
         new_dataset = Dataset(name=name, desc=desc)
         db.session.add(new_dataset)
         db.session.commit()
-
+        
         flash("KB Creation Successful!", "success")
         return redirect(url_for("dataset.dataset_list"))
 
@@ -83,6 +84,11 @@ def delete(dataset_id):
         Dataset.query.filter_by(id=dataset_id).delete()
         Document.query.filter_by(dataset_id=dataset_id).delete()
         Segment.query.filter_by(dataset_id=dataset_id).delete()
+        
+        # Delete milvus data
+        delete_expr = f'dataset_id == {dataset_id}'
+        DatasetMilvusModel.delete(delete_expr)
+        
         # Commit transaction
         db.session.commit()
 
