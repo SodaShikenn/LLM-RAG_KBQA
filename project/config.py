@@ -43,6 +43,30 @@ OVERLAP = 100
 OPENAI_BASE_URL = os.getenv('OPENAI_BASE_URL', 'https://api.openai.com/v1')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')
 
+QWEN_BASE_URL = os.getenv('QWEN_BASE_URL', 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1')
+QWEN_API_KEY = os.getenv('QWEN_API_KEY','')
+
+# LOCAL_QWEN_BASE_URL = 'http://22.50.21.17:23342/v1'
+# LOCAL_QWEN_API_KEY = 'xx'
+
+LLM_MODELS = {
+    'gpt-4o-mini': {
+        'base_url': OPENAI_BASE_URL,
+        'api_key': OPENAI_API_KEY,
+        'model_name': 'gpt-4o-mini'
+    },
+    'qwen-max': {
+        'base_url': QWEN_BASE_URL,
+        'api_key': QWEN_API_KEY,
+        'model_name': 'qwen-max'
+    },
+    # 'qwen2-7b': {
+    #     'base_url': LOCAL_QWEN_BASE_URL,
+    #     'api_key': LOCAL_QWEN_API_KEY,
+    #     'model_name': 'qwen'
+    # }
+}
+
 EMBEDDING_MODEL_NAME = 'text-embedding-3-small'
 
 EMBEDDING_MODELS = {

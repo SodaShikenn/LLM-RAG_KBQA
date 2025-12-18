@@ -1,6 +1,5 @@
 from config import *
 from openai import OpenAI
-from config import *
 
 
 def allowed_file(filename):
@@ -34,7 +33,27 @@ def get_llm_embedding(input):
     )
     return response
 
+
+def get_llm_chat(messages, model_name, stream=False):
+    model = LLM_MODELS[model_name]
+    client = OpenAI(
+        base_url = model['base_url'],
+        api_key = model['api_key']
+    )
+    response = client.chat.completions.create(
+        model = model['model_name'],
+        messages = messages,
+        temperature = 0.7,
+        stream = stream
+    )
+    return response
+
+
 if __name__ == '__main__':
-    resp = get_llm_embedding('さよならくちびる')
+    # resp = get_llm_embedding('さよならくちびる')
+    # print(resp)
+    # print(len(resp.data[0].embedding))
+    resp = get_llm_chat([
+        {'role': 'user', 'content': '给我讲个笑话.'}
+    ], 'qwen-max')
     print(resp)
-    print(len(resp.data[0].embedding))
