@@ -39,8 +39,8 @@ def initialize_extensions(app):
 
 
 def register_blueprints(app):
-    # Demo module
-    from apps.demo import bp as demo_bp
+    # Chat module
+    from apps.chat import bp as demo_bp
     app.register_blueprint(demo_bp)
     # Auth module
     from apps.auth import bp as auth_bp
