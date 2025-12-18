@@ -7,6 +7,7 @@
     <title>LLM-RAG Chatbot</title>
     <link rel="stylesheet" href="{{url_for('static', filename ='app.css')}}">
     <script src="https://cdn.bootcdn.net/ajax/libs/alpinejs/3.15.0/cdn.min.js" defer></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/marked/13.0.2/marked.min.js"></script>
 </head>
 
 <body class="bg-gray-100">
@@ -19,10 +20,11 @@
                     <!-- Model Selection -->
                     <div class="mt-4">
                         <label for="model-select" class="block mb-2 text-gray-800 font-medium">Select AI Model：</label>
-                        <select id="model-select"
+                        <select id="model-select" x-model="params.model_name"
                             class="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <template x-for="model_name in llmModels" :key="model_name">
-                                <option :value="model_name" x-text="model_name"></option>
+                                <option :value="model_name" :selected="params.model_name === model_name"
+                                    x-text="model_name"></option>
                             </template>
                         </select>
                     </div>
@@ -31,9 +33,9 @@
                         <div class="text-gray-800 mb-2 font-medium">Select Knowledge Base:</div>
                         <div class="flex flex-col space-y-2 overflow-y-auto h-28 p-3 border border-gray-300 rounded">
                             <div class="grid grid-cols-2 gap-2">
-                                <template x-for="dataset in datasets" key="dataset.id">
+                                <template x-for="dataset in datasets" :key="dataset.id">
                                     <label class="flex items-center space-x-2">
-                                        <input type="checkbox" :value="dataset.id"
+                                        <input type="checkbox" :value="dataset.id" x-model="params.dataset_ids"
                                             class="form-checkbox h-4 w-4 text-blue-600">
                                         <span class="text-gray-800" x-text="dataset.name"></span>
                                     </label>
@@ -60,103 +62,38 @@
                         <div class="text-sm text-gray-500">System Message: Welcome to the LLM-RAG chat system. You can
                             chat with me based on the knowledge bases on the left!</div>
                     </div>
-                    <div>
-                        <!-- Dynamic chat messages will be inserted here -->
-                        <div class="flex bg-blue-100 px-4 py-2 rounded-lg">
-                            <span class="w-16 text-right font-medium flex-shrink-0">User:</span>
-                            <span class="flex-1">What's the news today?</span>
-                        </div>
-                        <div class="flex bg-gray-100 px-4 py-2 rounded-lg">
-                            <span class="w-16 text-right font-medium flex-shrink-0">LLM:</span>
-                            <span class="flex-1">China's new energy industry has never received as much global attention
-                                as it does today. This extraordinary attention stems from the U.S. government's hype
-                                about so-called China's new energy overcapacity, with the aim of implementing more trade
-                                restrictions.</span>
-                        </div>
-                    </div>
                     <!-- Dynamic chat messages will be inserted here -->
-                    <div>
-                        <div class="flex bg-blue-100 px-4 py-2 rounded-lg">
-                            <span class="w-16 text-right font-medium flex-shrink-0">User:</span>
-                            <span class="flex-1">What's the news today?</span>
+                    <template x-for="(message, index) in messages" :key="index">
+                        <div>
+                            <template x-if="message.role === 'user'">
+                                <div class="flex bg-blue-100 px-4 py-2 rounded-lg">
+                                    <span class="w-16 text-right font-medium flex-shrink-0">User：</span>
+                                    <div class="flex-1" x-text="message.content"></div>
+                                </div>
+                            </template>
+                            <template x-if="message.role === 'assistant'">
+                                <div class="flex bg-gray-100 px-4 py-2 rounded-lg">
+                                    <span class="w-16 text-right font-medium flex-shrink-0">LLM：</span>
+                                    <div class="flex-1" x-html="convertMarkdown(message.content)"></div>
+                                </div>
+                            </template>
                         </div>
-                        <div class="flex bg-gray-100 px-4 py-2 rounded-lg">
-                            <span class="w-16 text-right font-medium flex-shrink-0">LLM:</span>
-                            <span class="flex-1">China's new energy industry has never received as much global attention
-                                as it does today. This extraordinary attention stems from the U.S. government's hype
-                                about so-called China's new energy overcapacity, with the aim of implementing more trade
-                                restrictions.</span>
-                        </div>
-                    </div>
-                    <!-- Dynamic chat messages will be inserted here -->
-                    <div>
-                        <div class="flex bg-blue-100 px-4 py-2 rounded-lg">
-                            <span class="w-16 text-right font-medium flex-shrink-0">User:</span>
-                            <span class="flex-1">What's the news today?</span>
-                        </div>
-                        <div class="flex bg-gray-100 px-4 py-2 rounded-lg">
-                            <span class="w-16 text-right font-medium flex-shrink-0">LLM:</span>
-                            <span class="flex-1">China's new energy industry has never received as much global attention
-                                as it does today. This extraordinary attention stems from the U.S. government's hype
-                                about so-called China's new energy overcapacity, with the aim of implementing more trade
-                                restrictions.</span>
-                        </div>
-                    </div>
-                    <!-- Dynamic chat messages will be inserted here -->
-                    <div>
-                        <div class="flex bg-blue-100 px-4 py-2 rounded-lg">
-                            <span class="w-16 text-right font-medium flex-shrink-0">User:</span>
-                            <span class="flex-1">What's the news today?</span>
-                        </div>
-                        <div class="flex bg-gray-100 px-4 py-2 rounded-lg">
-                            <span class="w-16 text-right font-medium flex-shrink-0">LLM:</span>
-                            <span class="flex-1">China's new energy industry has never received as much global attention
-                                as it does today. This extraordinary attention stems from the U.S. government's hype
-                                about so-called China's new energy overcapacity, with the aim of implementing more trade
-                                restrictions.</span>
-                        </div>
-                    </div>
-                    <!-- Dynamic chat messages will be inserted here -->
-                    <div>
-                        <div class="flex bg-blue-100 px-4 py-2 rounded-lg">
-                            <span class="w-16 text-right font-medium flex-shrink-0">User:</span>
-                            <span class="flex-1">What's the news today?</span>
-                        </div>
-                        <div class="flex bg-gray-100 px-4 py-2 rounded-lg">
-                            <span class="w-16 text-right font-medium flex-shrink-0">LLM:</span>
-                            <span class="flex-1">China's new energy industry has never received as much global attention
-                                as it does today. This extraordinary attention stems from the U.S. government's hype
-                                about so-called China's new energy overcapacity, with the aim of implementing more trade
-                                restrictions.</span>
-                        </div>
-                    </div>
-                    <!-- Dynamic chat messages will be inserted here -->
-                    <div>
-                        <div class="flex bg-blue-100 px-4 py-2 rounded-lg">
-                            <span class="w-16 text-right font-medium flex-shrink-0">User:</span>
-                            <span class="flex-1">What's the news today?</span>
-                        </div>
-                        <div class="flex bg-gray-100 px-4 py-2 rounded-lg">
-                            <span class="w-16 text-right font-medium flex-shrink-0">LLM:</span>
-                            <span class="flex-1">China's new energy industry has never received as much global attention
-                                as it does today. This extraordinary attention stems from the U.S. government's hype
-                                about so-called China's new energy overcapacity, with the aim of implementing more trade
-                                restrictions.</span>
-                        </div>
-                    </div>
+                    </template>
+
                 </div>
-                <!-- Input Box -->
-                <div class="p-4 border-t border-gray-300 bg-white">
-                    <div class="flex space-x-4">
-                        <input type="text" id="chat-input"
-                            class="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Enter message...">
-                        <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Send</button>
-                        <button class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Cancel</button>
-                    </div>
+            </div>
+            <!-- Input Box -->
+            <div class="p-4 border-t border-gray-300 bg-white">
+                <div class="flex space-x-4">
+                    <input type="text" id="chat-input" x-model="params.dataset_ids"
+                        class="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter message...">
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Send</button>
+                    <button class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Cancel</button>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <script>
@@ -164,7 +101,31 @@
             llmModels = JSON.parse('{{ llm_models | tojson }}')
             return {
                 llmModels: llmModels,
-                datasets: JSON.parse('{{ datasets | tojson }}')
+                datasets: JSON.parse('{{ datasets | tojson }}'),
+                params: {
+                    model_name: llmModels[0],
+                    dataset_ids: []
+                },
+                chatInput: '',
+                messages: [
+                    { 'role': 'user', 'content': 'Tell me a joke' },
+                    { 'role': 'assistant', 'content': 'A man goes to the doctor and says: "Doctor, my eye hurts every time I drink coffee." Doctor: "Have you tried taking the **spoon** out?"' },
+                ],
+                convertMarkdown: function (content) {
+                    return marked.parse(content);
+                },
+                updateChatWindow: function () {
+                    const chatWindow = document.getElementById('chat-window');
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                },
+                init: function () {
+                    this.$watch('messages', (value) => {
+                        this.updateChatWindow();
+                    });
+                    this.$nextTick(() => {
+                        this.updateChatWindow();
+                    });
+                }
             }
         }
     </script>
