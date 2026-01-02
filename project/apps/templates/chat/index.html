@@ -90,7 +90,8 @@
                         placeholder="Enter message...">
                     <button @click="sendMessage"
                         class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Send</button>
-                    <button class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Cancel</button>
+                    <button @click="abortCurrentRequest()"
+                        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Cancel</button>
                 </div>
             </div>
         </div>
@@ -127,17 +128,19 @@
                     dataset_ids: []
                 },
                 chatInput: '',
-                messages: [
-                    { 'role': 'user', 'content': 'Tell me a joke' },
-                    { 'role': 'assistant', 'content': 'A man goes to the doctor and says: "Doctor, my eye hurts every time I drink coffee." Doctor: "Have you tried taking the **spoon** out?"' },
-                ],
+                messages: [],
+                abortRequest: false,
+
+                abortCurrentRequest: function () {
+                    this.abortRequest = true
+                },
 
                 sendMessage: async function () {
-                    // 内容为空时拦截
+                    // Block if content is empty
                     if (!this.chatInput.trim()) {
                         return;
                     }
-                    // 显示用户问题并清空输入框
+                    // Display user question and clear input box
                     this.messages.push({ role: 'user', content: this.chatInput });
                     this.chatInput = '';
 
@@ -146,7 +149,7 @@
                             messages: this.messages,
                             params: this.params
                         }
-                        const response = await sendRequest('/chat/test', 'POST', obj, false)
+                        const response = await sendRequest('/chat/completions', 'POST', obj, false)
 
                         const reader = response.body.getReader();
                         const decoder = new TextDecoder();
@@ -154,31 +157,33 @@
                         let chunk;
                         let text = '';
 
-                        // 计算对话轮数，最后一个值就是大模型的回复
+                        // Calculate dialogue rounds, the last value is the LLM's response
                         let modelMessageIndex = this.messages.length;
-                        this.messages.push({ role: 'assistant', content: '' }); // 添加占位
+                        this.messages.push({ role: 'assistant', content: '' }); // Add placeholder
 
                         while (true) {
                             chunk = await reader.read();
-                            // 数据传输完成
-                            if (chunk.done) {
+                            // Data transfer completed
+                            if (chunk.done || this.abortRequest) {
                                 break;
                             }
-                            // 解码后端流式数据
+                            // Decode backend streaming data
                             buffer = decoder.decode(chunk.value, { stream: true });
                             let lines = buffer.split('\n')
                             for (let i = 0; i < lines.length - 1; i++) {
                                 const line = lines[i].trim();
                                 if (line.startsWith('data:')) {
-                                    // 解析并追加数据
+                                    // Parse and append data
                                     const jsonString = line.substring(5).trim();
                                     parseData = JSON.parse(jsonString)
                                     text += parseData.data.content
-                                    // 更新界面内容
+                                    // Update interface content
                                     this.messages[modelMessageIndex].content = text;
                                 }
                             }
                         }
+                        // 注意循环结束后要还原，不然无法发起下一次请求
+                        this.abortRequest = false;
                     } catch (error) {
                         console.error('Fetch error: ', error);
                     }
