@@ -19,19 +19,24 @@ def task(document_id=None, segment_id=None):
             delete_expr = f'document_id == {document_id}'
             DatasetMilvusModel.delete(delete_expr)
 
-            # Store segments
+            # Prepare batch data for insertion
+            batch_data = []
             for segment in segments:
-                # Get text embedding and store
+                # Get text embedding
                 response = get_llm_embedding(segment.content)
                 text_vector = response.data[0].embedding
-                DatasetMilvusModel.insert([{
+                batch_data.append({
                     'dataset_id': segment.dataset_id,
                     'document_id': segment.document_id,
                     'segment_id': segment.id,
                     'text_vector': text_vector
-                }])
+                })
                 # Update segment status
                 segment.status = 'completed'
+
+            # Batch insert all segments at once to avoid timestamp lag
+            if batch_data:
+                DatasetMilvusModel.insert(batch_data)
 
             # Update document status
             document.status = 'completed'

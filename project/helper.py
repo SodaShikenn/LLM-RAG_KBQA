@@ -1,5 +1,6 @@
 from config import *
 from openai import OpenAI
+import json
 
 
 def allowed_file(filename):
@@ -47,6 +48,17 @@ def get_llm_chat(messages, model_name, stream=False):
         stream = stream
     )
     return response
+
+def json_response(status, message, data=None, errors=None):
+    response = {
+        'status': status,
+        'message': message
+    }
+    if data is not None:
+        response['data'] = data
+    if errors is not None:
+        response['errors'] = errors
+    return json.dumps(response)
 
 
 if __name__ == '__main__':

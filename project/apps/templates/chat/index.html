@@ -30,7 +30,7 @@
                     </div>
                     <!-- Knowledge Base Selection -->
                     <div class="mt-6">
-                        <div class="text-gray-800 mb-2 font-medium">Select Knowledge Base:</div>
+                        <div class="text-gray-800 mb-2 font-medium">Select Knowledge Base：</div>
                         <div class="flex flex-col space-y-2 overflow-y-auto h-28 p-3 border border-gray-300 rounded">
                             <div class="grid grid-cols-2 gap-2">
                                 <template x-for="dataset in datasets" :key="dataset.id">
@@ -85,10 +85,11 @@
             <!-- Input Box -->
             <div class="p-4 border-t border-gray-300 bg-white">
                 <div class="flex space-x-4">
-                    <input type="text" id="chat-input" x-model="params.dataset_ids"
+                    <input @keydown.enter="sendMessage" type="text" id="chat-input" x-model="chatInput"
                         class="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Enter message...">
-                    <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Send</button>
+                    <button @click="sendMessage"
+                        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Send</button>
                     <button class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Cancel</button>
                 </div>
             </div>
@@ -97,6 +98,25 @@
     </div>
 
     <script>
+        async function sendRequest(url, method, data, to_json = true) {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            if (to_json) {
+                return await response.json();
+            } else {
+                return await response;
+            }
+        }
+
         function app() {
             llmModels = JSON.parse('{{ llm_models | tojson }}')
             return {
@@ -111,6 +131,59 @@
                     { 'role': 'user', 'content': 'Tell me a joke' },
                     { 'role': 'assistant', 'content': 'A man goes to the doctor and says: "Doctor, my eye hurts every time I drink coffee." Doctor: "Have you tried taking the **spoon** out?"' },
                 ],
+
+                sendMessage: async function () {
+                    // 内容为空时拦截
+                    if (!this.chatInput.trim()) {
+                        return;
+                    }
+                    // 显示用户问题并清空输入框
+                    this.messages.push({ role: 'user', content: this.chatInput });
+                    this.chatInput = '';
+
+                    try {
+                        const obj = {
+                            messages: this.messages,
+                            params: this.params
+                        }
+                        const response = await sendRequest('/chat/test', 'POST', obj, false)
+
+                        const reader = response.body.getReader();
+                        const decoder = new TextDecoder();
+
+                        let chunk;
+                        let text = '';
+
+                        // 计算对话轮数，最后一个值就是大模型的回复
+                        let modelMessageIndex = this.messages.length;
+                        this.messages.push({ role: 'assistant', content: '' }); // 添加占位
+
+                        while (true) {
+                            chunk = await reader.read();
+                            // 数据传输完成
+                            if (chunk.done) {
+                                break;
+                            }
+                            // 解码后端流式数据
+                            buffer = decoder.decode(chunk.value, { stream: true });
+                            let lines = buffer.split('\n')
+                            for (let i = 0; i < lines.length - 1; i++) {
+                                const line = lines[i].trim();
+                                if (line.startsWith('data:')) {
+                                    // 解析并追加数据
+                                    const jsonString = line.substring(5).trim();
+                                    parseData = JSON.parse(jsonString)
+                                    text += parseData.data.content
+                                    // 更新界面内容
+                                    this.messages[modelMessageIndex].content = text;
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Fetch error: ', error);
+                    }
+                },
+
                 convertMarkdown: function (content) {
                     return marked.parse(content);
                 },
