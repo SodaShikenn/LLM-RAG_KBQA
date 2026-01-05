@@ -6,6 +6,7 @@ from commands import register_commands
 from config import *
 
 from apps.dataset.models import Dataset, Document, Segment
+from apps.chat.models import Conversation
 
 
 def create_app() -> Flask:

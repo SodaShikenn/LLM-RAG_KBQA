@@ -6,13 +6,18 @@ from apps.dataset.models import Dataset
 import time
 from helper import *
 from .services import retrieve_related_texts
+from .models import Conversation
 
 @bp.route('/', endpoint='index')
 def index():
     dataset_objs = Dataset.query.order_by(Dataset.id.desc()).all()
+    conversation_objs = Conversation.query.with_entities(
+        Conversation.id, Conversation.uid, Conversation.name
+    ).order_by(Conversation.id.desc()).all()
     data = {
         'llm_models': list(LLM_MODELS.keys()),
         'datasets': [{'id': obj.id, 'name': obj.name} for obj in dataset_objs],
+        'conversations': [{'uid': obj.uid, 'name': obj.name} for obj in conversation_objs],
     }
     return render_template('chat/index.html', **data)
 

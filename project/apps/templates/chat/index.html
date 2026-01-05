@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LLM-RAG Chatbot</title>
     <link rel="stylesheet" href="{{url_for('static', filename ='app.css')}}">
+    <link rel="icon" type="image/png" href="{{url_for('static', filename='favicon_64.ico')}}">
     <script src="https://cdn.bootcdn.net/ajax/libs/alpinejs/3.15.0/cdn.min.js" defer></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/marked/13.0.2/marked.min.js"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100">
@@ -16,36 +18,56 @@
         <div class="w-1/4 bg-white p-6 flex flex-col justify-between shadow-md">
             <div>
                 <h1 class="text-2xl font-semibold text-blue-600">LLM-RAG Chatbot</h1>
-                <span x-test="msg" span>
-                    <!-- Model Selection -->
-                    <div class="mt-4">
-                        <label for="model-select" class="block mb-2 text-gray-800 font-medium">Select AI Model：</label>
-                        <select id="model-select" x-model="params.model_name"
-                            class="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <template x-for="model_name in llmModels" :key="model_name">
-                                <option :value="model_name" :selected="params.model_name === model_name"
-                                    x-text="model_name"></option>
+                <!-- Model Selection -->
+                <div class="mt-4">
+                    <label for="model-select" class="block mb-2 text-gray-800 font-medium">Select AI Model：</label>
+                    <select id="model-select" x-model="params.model_name"
+                        class="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <template x-for="model_name in llmModels" :key="model_name">
+                            <option :value="model_name" :selected="params.model_name === model_name"
+                                x-text="model_name"></option>
+                        </template>
+                    </select>
+                </div>
+                <!-- Knowledge Base Selection -->
+                <div class="mt-6">
+                    <div class="text-gray-800 mb-2 font-medium">Select Knowledge Base：</div>
+                    <div class="flex flex-col space-y-2 overflow-y-auto h-28 p-3 border border-gray-300 rounded">
+                        <div class="grid grid-cols-2 gap-2">
+                            <template x-for="dataset in datasets" :key="dataset.id">
+                                <label class="flex items-center space-x-2">
+                                    <input type="checkbox" :value="dataset.id" x-model="params.dataset_ids"
+                                        class="form-checkbox h-4 w-4 text-blue-600">
+                                    <span class="text-gray-800" x-text="dataset.name"></span>
+                                </label>
                             </template>
-                        </select>
-                    </div>
-                    <!-- Knowledge Base Selection -->
-                    <div class="mt-6">
-                        <div class="text-gray-800 mb-2 font-medium">Select Knowledge Base：</div>
-                        <div class="flex flex-col space-y-2 overflow-y-auto h-28 p-3 border border-gray-300 rounded">
-                            <div class="grid grid-cols-2 gap-2">
-                                <template x-for="dataset in datasets" :key="dataset.id">
-                                    <label class="flex items-center space-x-2">
-                                        <input type="checkbox" :value="dataset.id" x-model="params.dataset_ids"
-                                            class="form-checkbox h-4 w-4 text-blue-600">
-                                        <span class="text-gray-800" x-text="dataset.name"></span>
-                                    </label>
-                                </template>
-                                <!-- Add more knowledge base options -->
-                            </div>
+                            <!-- Add more knowledge base options -->
                         </div>
                     </div>
-
-
+                </div>
+                <!-- Conversation History Management -->
+                <div class="mt-6">
+                    <div class="flex justify-between items-center">
+                        <div class="text-gray-800 font-medium">Conversation History:</div>
+                        <button class="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">New
+                            Chat</button>
+                    </div>
+                    <div class="flex flex-col space-y-3 overflow-y-auto h-80" id="conversation-list">
+                        <template x-for="conversation in conversations" :key="conversation.uid">
+                            <div class="flex items-center justify-between border px-3 py-1.5 rounded">
+                                <span x-text="conversation.name"></span>
+                                <div class="space-x-2 flex items-center">
+                                    <button class="text-blue-500 hover:text-blue-700">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button class="text-blue-500 hover:text-blue-700">
+                                        <i class="fa fa-trash-o"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
             </div>
             <!-- Copyright Information -->
             <div class="text-center mt-4 text-gray-700">Copyright @ 2025. <a href="https://github.com/SodaShikenn"
@@ -96,7 +118,6 @@
             </div>
         </div>
     </div>
-    </div>
 
     <script>
         async function sendRequest(url, method, data, to_json = true) {
@@ -123,6 +144,7 @@
             return {
                 llmModels: llmModels,
                 datasets: JSON.parse('{{ datasets | tojson }}'),
+                conversations: JSON.parse('{{ conversations | tojson }}'),
                 params: {
                     model_name: llmModels[0],
                     dataset_ids: []
