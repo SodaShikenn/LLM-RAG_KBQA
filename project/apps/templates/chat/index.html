@@ -49,7 +49,8 @@
                 <div class="mt-6">
                     <div class="flex justify-between items-center">
                         <div class="text-gray-800 font-medium">Conversation History:</div>
-                        <button class="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">New
+                        <button @click="createConversation()"
+                            class="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">New
                             Chat</button>
                     </div>
                     <div class="flex flex-col space-y-3 overflow-y-auto h-80" id="conversation-list">
@@ -139,6 +140,10 @@
             }
         }
 
+        function generateUniqueId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+        }
+
         function app() {
             llmModels = JSON.parse('{{ llm_models | tojson }}')
             return {
@@ -210,7 +215,23 @@
                         console.error('Fetch error: ', error);
                     }
                 },
-
+                createConversation: async function () {
+                    try {
+                        const newConversationName = `New Chat ${this.conversations.length + 1}`;
+                        const obj = {
+                            uid: generateUniqueId(),
+                            name: newConversationName
+                        };
+                        const response = await sendRequest('/chat/conversation_create', 'POST', obj);
+                        if (response && response.status == 200) {
+                            this.conversations.unshift(obj)
+                        } else {
+                            throw new Error(response.message);
+                        }
+                    } catch (error) {
+                        alert('Error creating conversation:' + error);
+                    }
+                },
                 convertMarkdown: function (content) {
                     return marked.parse(content);
                 },

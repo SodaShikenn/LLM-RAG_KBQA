@@ -65,3 +65,18 @@ def completions():
                 }) + '\n\n'
     return Response(generate(), content_type='text/plain')
 
+@bp.route('/conversation_create', methods=['POST'], endpoint='conversation_create')
+def conversation_create():
+    try:
+        data = request.get_json()
+        new_conversation = Conversation(
+            uid = data['uid'],
+            name = data['name'],
+            messages = []
+        )
+        db.session.add(new_conversation)
+        db.session.commit()
+        return json_response(200, 'ok')
+    except Exception as e:
+        return json_response(500, f'error: {e}')
+
