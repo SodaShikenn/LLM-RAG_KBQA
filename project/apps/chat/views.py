@@ -5,6 +5,7 @@ from config import LLM_MODELS
 from apps.dataset.models import Dataset
 import time
 from helper import *
+from .services import retrieve_related_texts
 
 @bp.route('/', endpoint='index')
 def index():
@@ -38,6 +39,11 @@ def completions():
     data = request.get_json()
     messages = data['messages']
     params = data['params']
+    # If knowledge base is selected, append retrieved text
+    if params['dataset_ids']:
+        # Retrieve similar texts and add to messages
+        messages = retrieve_related_texts(messages, params)
+
     # Request LLM
     completion = get_llm_chat(messages[:10], params['model_name'], True)
     # Define generator

@@ -182,7 +182,7 @@
                                 }
                             }
                         }
-                        // 注意循环结束后要还原，不然无法发起下一次请求
+                        // Note: Reset after loop ends, otherwise unable to initiate next request
                         this.abortRequest = false;
                     } catch (error) {
                         console.error('Fetch error: ', error);

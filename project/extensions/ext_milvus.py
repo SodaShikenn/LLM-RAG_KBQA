@@ -71,6 +71,8 @@ class MilvusBaseModel:
     def insert(cls, data):
         collection = cls.load_collection()
         collection.insert(data)
+        # Note: Not flushing here to avoid blocking. Milvus will auto-flush periodically.
+        # Data may not be immediately visible in searches until auto-flush completes.
 
     @classmethod
     def query(cls, expr, output_fields=None):
@@ -97,5 +99,14 @@ class MilvusBaseModel:
             # Dynamically get all fields
             schema = collection.schema
             output_fields = [field.name for field in schema.fields]
-        results = collection.search(query_vectors, cls.index_field_name, search_params, top_k, expr=expr, output_fields=output_fields)
+        # Use guarantee_timestamp=0 to use the latest data without timestamp checking
+        results = collection.search(
+            query_vectors,
+            cls.index_field_name,
+            search_params,
+            top_k,
+            expr=expr,
+            output_fields=output_fields,
+            guarantee_timestamp=0  # Use the most up-to-date data
+        )
         return results

@@ -16,7 +16,7 @@ flask db upgrade
 flask dataset_init_milvus
 
 ## Start Celery Worker
-celery -A app.celery worker -c 2 --loglevel INFO -Q dataset --logfile storage/logs/celery_worker.log
+celery -A app.celery worker -c 2 --loglevel INFO -Q dataset --logfile storage/logs/celery_worker.log --pool=threads
 
 ## Start Flask Server
 flask run --debug
