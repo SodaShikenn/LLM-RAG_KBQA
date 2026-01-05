@@ -55,16 +55,20 @@
                     </div>
                     <div class="flex flex-col space-y-3 overflow-y-auto h-80" id="conversation-list">
                         <template x-for="conversation in conversations" :key="conversation.uid">
-                            <div class="flex items-center justify-between border px-3 py-1.5 rounded">
+                            <div @click="activeConversation(conversation.uid)"
+                                class="flex items-center justify-between border px-3 py-1.5 rounded cursor-pointer"
+                                :class="currentConversation.uid == conversation.uid ? 'border-blue-400 bg-gray-100 text-blue-500' : ''">
                                 <span x-text="conversation.name"></span>
-                                <div class="space-x-2 flex items-center">
-                                    <button class="text-blue-500 hover:text-blue-700">
-                                        <i class="fa fa-edit"></i>
-                                    </button>
-                                    <button class="text-blue-500 hover:text-blue-700">
-                                        <i class="fa fa-trash-o"></i>
-                                    </button>
-                                </div>
+                                <template x-if="currentConversation.uid === conversation.uid">
+                                    <div class="space-x-2 flex items-center">
+                                        <button class="text-blue-500 hover:text-blue-700">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                        <button class="text-blue-500 hover:text-blue-700">
+                                            <i class="fa fa-trash-o"></i>
+                                        </button>
+                                    </div>
+                                </template>
                             </div>
                         </template>
                     </div>
@@ -150,6 +154,10 @@
                 llmModels: llmModels,
                 datasets: JSON.parse('{{ datasets | tojson }}'),
                 conversations: JSON.parse('{{ conversations | tojson }}'),
+                currentConversation: {
+                    uid: null,
+                    name: null
+                },
                 params: {
                     model_name: llmModels[0],
                     dataset_ids: []
@@ -225,11 +233,24 @@
                         const response = await sendRequest('/chat/conversation_create', 'POST', obj);
                         if (response && response.status == 200) {
                             this.conversations.unshift(obj)
+                            this.activeConversation();
                         } else {
                             throw new Error(response.message);
                         }
                     } catch (error) {
                         alert('Error creating conversation:' + error);
+                    }
+                },
+                activeConversation: async function (uid = null) {
+                    if (!uid) {
+                        // When there is no historical dialogue, create an empty one.
+                        if (this.conversations.length == 0) {
+                            await this.createConversation()
+                        }
+                        this.currentConversation = this.conversations[0]
+                    } else {
+                        const conversation = this.conversations.find(conv => conv.uid === uid);
+                        this.currentConversation = conversation
                     }
                 },
                 convertMarkdown: function (content) {
@@ -246,6 +267,7 @@
                     this.$nextTick(() => {
                         this.updateChatWindow();
                     });
+                    this.activeConversation();
                 }
             }
         }
