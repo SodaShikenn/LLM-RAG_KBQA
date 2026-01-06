@@ -222,6 +222,7 @@
                             chunk = await reader.read();
                             // Data transfer completed
                             if (chunk.done || this.abortRequest) {
+                                this.saveConversationMessages();
                                 break;
                             }
                             // Decode backend streaming data
@@ -275,6 +276,7 @@
                         this.currentConversation = conversation
                     }
                     this.conversationEditStatus = false
+                    this.getConversationMessages()
                 },
                 deleteConversation: async function () {
                     // First confirm if user really wants to delete the conversation
@@ -307,6 +309,37 @@
                         const response = await sendRequest('/chat/conversation_edit', 'POST', obj);
                         if (response && response.status == 200) {
                             this.conversationEditStatus = false
+                        } else {
+                            throw new Error(response.message);
+                        }
+                    } catch (error) {
+                        alert('Error creating conversation:' + error);
+                    }
+                },
+                saveConversationMessages: async function () {
+                    try {
+                        let obj = {
+                            uid: this.currentConversation.uid,
+                            messages: this.messages
+                        }
+                        const response = await sendRequest('/chat/save_conversation_messages', 'POST', obj);
+                        if (response && response.status == 200) {
+                            // 成功
+                        } else {
+                            throw new Error(response.message);
+                        }
+                    } catch (error) {
+                        alert('Error creating conversation:' + error);
+                    }
+                },
+                getConversationMessages: async function () {
+                    try {
+                        let obj = {
+                            uid: this.currentConversation.uid
+                        }
+                        const response = await sendRequest('/chat/get_conversation_messages', 'POST', obj);
+                        if (response && response.status == 200) {
+                            this.messages = response.data.messages
                         } else {
                             throw new Error(response.message);
                         }

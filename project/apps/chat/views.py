@@ -111,3 +111,25 @@ def conversation_edit():
         return json_response(200, 'ok')
     except Exception as e:
         return json_response(500, f'error: {e}')
+    
+
+@bp.route('/save_conversation_messages', methods=['POST'], endpoint='save_conversation_messages')
+def conversation_save_messages():
+    try:
+        data = request.get_json()
+        conversation = Conversation.query.filter_by(uid=data['uid']).first()
+        conversation.messages = data['messages']
+        db.session.commit()
+        return json_response(200, 'ok')
+    except Exception as e:
+        return json_response(500, f'error: {e}')
+    
+
+@bp.route('/get_conversation_messages', methods=['POST'], endpoint='get_conversation_messages')
+def conversation_get_messages():
+    try:
+        data = request.get_json()
+        conversation = Conversation.query.filter_by(uid=data['uid']).first()
+        return json_response(200, 'ok', {'messages': conversation.messages})
+    except Exception as e:
+        return json_response(500, f'error: {e}')
