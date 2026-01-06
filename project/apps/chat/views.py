@@ -8,6 +8,7 @@ from helper import *
 from .services import retrieve_related_texts
 from .models import Conversation
 
+
 @bp.route('/', endpoint='index')
 def index():
     dataset_objs = Dataset.query.order_by(Dataset.id.desc()).all()
@@ -20,6 +21,7 @@ def index():
         'conversations': [{'uid': obj.uid, 'name': obj.name} for obj in conversation_objs],
     }
     return render_template('chat/index.html', **data)
+
 
 @bp.route('/test', methods=['POST'])
 def test():
@@ -37,6 +39,7 @@ def test():
                     'text': full_text
                 }) + '\n\n'
     return Response(generate(), content_type='text/plain')
+
 
 @bp.route('/completions', methods=['POST'], endpoint='completions')
 def completions():
@@ -65,6 +68,7 @@ def completions():
                 }) + '\n\n'
     return Response(generate(), content_type='text/plain')
 
+
 @bp.route('/conversation_create', methods=['POST'], endpoint='conversation_create')
 def conversation_create():
     try:
@@ -80,3 +84,17 @@ def conversation_create():
     except Exception as e:
         return json_response(500, f'error: {e}')
 
+
+@bp.route('/conversation_delete', methods=['POST'], endpoint='conversation_delete')
+def conversation_delete():
+    try:
+        data = request.get_json()
+        conversation = Conversation.query.filter_by(
+            uid = data['uid'],
+        ).first()
+        db.session.delete(conversation)
+        db.session.commit()
+        return json_response(200, 'ok')
+    except Exception as e:
+        return json_response(500, f'error: {e}')
+    
