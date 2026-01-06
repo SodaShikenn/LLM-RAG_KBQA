@@ -58,12 +58,27 @@
                             <div @click="activeConversation(conversation.uid)"
                                 class="flex items-center justify-between border px-3 py-1.5 rounded cursor-pointer"
                                 :class="currentConversation.uid == conversation.uid ? 'border-blue-400 bg-gray-100 text-blue-500' : ''">
-                                <span x-text="conversation.name"></span>
+                                <template x-if="conversationEditStatus && currentConversation.uid == conversation.uid">
+                                    <input type="text" x-model="currentConversation.name" class="px-1 py-0.5 text-sm"
+                                        @click="event.stopPropagation()">
+                                </template>
+                                <template x-if="!conversationEditStatus || currentConversation.uid != conversation.uid">
+                                    <span x-text="conversation.name"></span>
+                                </template>
                                 <template x-if="currentConversation.uid === conversation.uid">
                                     <div class="space-x-2 flex items-center">
-                                        <button class="text-blue-500 hover:text-blue-700">
-                                            <i class="fa fa-edit"></i>
-                                        </button>
+                                        <template x-if="conversationEditStatus">
+                                            <button @click="saveConversation(); event.stopPropagation()"
+                                                class="text-blue-500 hover:text-blue-700">
+                                                <i class="fa fa-save"></i>
+                                            </button>
+                                        </template>
+                                        <template x-if="!conversationEditStatus">
+                                            <button x-on:click="editConversation(); event.stopPropagation()"
+                                                class="text-blue-500 hover:text-blue-700">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                        </template>
                                         <button @click="deleteConversation(); event.stopPropagation()"
                                             class="text-blue-500 hover:text-blue-700">
                                             <i class="fa fa-trash-o"></i>
@@ -166,6 +181,12 @@
                 chatInput: '',
                 messages: [],
                 abortRequest: false,
+                // 定义编辑状态
+                conversationEditStatus: false,
+
+                editConversation: function () {
+                    this.conversationEditStatus = true
+                },
 
                 abortCurrentRequest: function () {
                     this.abortRequest = true
@@ -253,6 +274,7 @@
                         const conversation = this.conversations.find(conv => conv.uid === uid);
                         this.currentConversation = conversation
                     }
+                    this.conversationEditStatus = false
                 },
                 deleteConversation: async function () {
                     // First confirm if user really wants to delete the conversation
@@ -268,6 +290,23 @@
                         if (response && response.status == 200) {
                             this.conversations = this.conversations.filter(convo => convo.uid !== this.currentConversation.uid);
                             this.activeConversation()
+                        } else {
+                            throw new Error(response.message);
+                        }
+                    } catch (error) {
+                        alert('Error creating conversation:' + error);
+                    }
+                },
+
+                saveConversation: async function () {
+                    try {
+                        const obj = {
+                            uid: this.currentConversation.uid,
+                            name: this.currentConversation.name,
+                        }
+                        const response = await sendRequest('/chat/conversation_edit', 'POST', obj);
+                        if (response && response.status == 200) {
+                            this.conversationEditStatus = false
                         } else {
                             throw new Error(response.message);
                         }

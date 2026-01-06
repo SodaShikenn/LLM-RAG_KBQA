@@ -98,3 +98,16 @@ def conversation_delete():
     except Exception as e:
         return json_response(500, f'error: {e}')
     
+
+@bp.route('/conversation_edit', methods=['POST'], endpoint='conversation_edit')
+def conversation_edit():
+    try:
+        data = request.get_json()
+        conversation = Conversation.query.filter_by(
+            uid = data['uid'],
+        ).first()
+        conversation.name = data['name']
+        db.session.commit()
+        return json_response(200, 'ok')
+    except Exception as e:
+        return json_response(500, f'error: {e}')
